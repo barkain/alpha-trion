@@ -49,8 +49,8 @@
 }
 
 .storyCard {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 215, 0, 0.2);
   border-radius: 24px;
   padding: 2rem;
@@ -172,87 +172,181 @@
   font-family: "Heebo", sans-serif;
 }
 
-/* ─── Map ─── */
-.mapTitle {
+/* ─── Treasure Map ─── */
+.mapOverlay {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  z-index: 10;
+}
+
+.mapBg {
+  position: absolute;
+  inset: 0;
+  background: url("/map-bg.png") center center / cover no-repeat;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mapHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(to bottom, rgba(8, 5, 25, 0.92) 60%, transparent);
+  pointer-events: none;
+}
+
+.mapTitleNew {
   font-family: "Secular One", sans-serif;
-  font-size: 2rem;
-  margin-bottom: 0.3rem;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
-.mapSubtitle {
-  font-size: 0.95rem;
-  opacity: 0.7;
-  margin-bottom: 0.5rem;
-}
-.starsBadge {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.5rem 1.5rem;
+
+.starsBadgeNew {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.35rem 1rem;
   border-radius: 20px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
 }
-.worldsPath {
+
+/* ─── Markers ─── */
+.mapMarker {
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 500px;
+  z-index: 10;
+  transform: translate(-50%, -50%);
 }
-.pathLine {
-  width: 3px;
-  height: 24px;
-  margin: 0 auto;
-  border-radius: 2px;
-}
-.worldNode {
-  width: 100%;
-  padding: 1.2rem 1.5rem;
-  border-radius: 20px;
-  cursor: pointer;
+
+.medallion {
+  width: clamp(60px, 12vw, 80px);
+  height: clamp(60px, 12vw, 80px);
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  transition: all 0.3s;
-  border: 3px solid transparent;
+  justify-content: center;
+  background: rgba(10, 8, 30, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-.available {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
+
+.markerEmoji {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
 }
-.locked {
-  background: rgba(255, 255, 255, 0.05);
-  opacity: 0.5;
-  cursor: not-allowed;
+
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
 }
-.completed {
-  background: rgba(46, 204, 113, 0.2);
-  border-color: rgba(46, 204, 113, 0.5);
+
+.checkOverlay {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
-.worldEmoji {
-  font-size: 2.5rem;
+
+.markerLabel {
+  margin-top: 0.4rem;
+  text-align: center;
+  pointer-events: none;
 }
-.worldInfo {
-  flex: 1;
-  text-align: right;
+
+.markerName {
+  font-family: "Secular One", sans-serif;
+  font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
 }
-.worldName {
-  font-weight: 700;
-  font-size: 1.15rem;
+
+.markerChar {
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+  opacity: 0.65;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
-.worldCharName {
-  font-size: 0.8rem;
-  opacity: 0.6;
-  margin-top: 1px;
-}
-.worldStatus {
-  font-size: 0.85rem;
-  opacity: 0.7;
+
+.markerStars {
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  letter-spacing: 1px;
   margin-top: 2px;
 }
-.worldBadge {
-  font-size: 1.5rem;
+
+.markerCta {
+  font-size: clamp(0.5rem, 1.3vw, 0.65rem);
+  color: #ffd700;
+  margin-top: 2px;
+  font-family: "Heebo", sans-serif;
+}
+
+/* Marker states */
+.marker_completed .medallion {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.25), 0 0 40px rgba(255, 215, 0, 0.08);
+}
+
+.marker_available .medallion {
+  border-color: rgba(255, 255, 255, 0.5);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.marker_locked .medallion {
+  cursor: not-allowed;
+  filter: saturate(0.3);
+  opacity: 0.55;
+}
+.marker_locked .markerLabel {
+  opacity: 0.4;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.35), 0 0 48px rgba(255, 215, 0, 0.12);
+  }
+}
+
+@media (max-width: 480px) {
+  .markerChar {
+    display: none;
+  }
+  .mapHeader {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.6rem 1rem;
+  }
 }
 
 /* ─── Loading ─── */

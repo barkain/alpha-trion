@@ -1,6 +1,54 @@
-# 🏰 ממלכת החידות — Gifted Kingdom
+<!-- MAIN_IMAGE_PLACEHOLDER -->
+
+# Alpha Trion
 
 Interactive 3D educational game for gifted program test preparation (Grade 2, Israel).
+
+## Setup
+
+```bash
+cp .env.example .env
+# Edit .env with your API key
+npm install
+npm run dev
+```
+
+## AI Provider Configuration
+
+The app auto-detects which AI provider to use based on your environment variables.
+
+**Environment Variables:**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_AI_API_KEY` | Yes | API key for any supported provider |
+| `VITE_AI_BASE_URL` | No | Base URL for the AI endpoint |
+| `VITE_AI_MODEL` | No | Override default model |
+
+**Auto-detection logic (3 tiers):**
+
+1. Key starts with `sk-ant-` → Direct Anthropic API (default model: `claude-sonnet-4-6`)
+2. Base URL contains "anthropic" → Anthropic-format proxy like z.ai (default model: `gpt-4o-mini`)
+3. Everything else → OpenAI-compatible (default model: `gpt-4o-mini`)
+
+**Example configs:**
+
+Direct Anthropic:
+```env
+VITE_AI_API_KEY=sk-ant-...
+```
+
+OpenAI:
+```env
+VITE_AI_API_KEY=sk-...
+```
+
+z.ai or other Anthropic proxy:
+```env
+VITE_AI_API_KEY=your-zai-key
+VITE_AI_BASE_URL=https://api.z.ai/api/anthropic
+VITE_AI_MODEL=GLM-4.7
+```
 
 ## Architecture
 
@@ -63,13 +111,6 @@ src/
 4. **Character System**: Each world has an NPC with personality-specific dialog for greetings, correct/wrong responses, loading messages, and story intros.
 
 5. **CSS Modules**: All screen styles are scoped via `screens.module.css` to avoid global conflicts with R3F canvas.
-
-## Running
-
-```bash
-npm install
-npm run dev
-```
 
 ## Extending
 

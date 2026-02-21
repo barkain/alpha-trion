@@ -1,6 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useGameStore } from "./stores/gameStore";
 import { WorldScene } from "./components/3d/scenes/WorldScene";
+import { StoryScene } from "./components/3d/scenes/StoryScene";
 import {
   NameInputScreen,
   StoryScreen,
@@ -15,7 +16,7 @@ import {
 const BG_MAP: Record<string, string> = {
   nameInput: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
   story: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
-  map: "linear-gradient(135deg, #0f0c29, #1a1a5e, #24243e)",
+  map: "linear-gradient(135deg, #050311, #0a0820, #050311)",
   gameComplete: "linear-gradient(135deg, #1a0f00, #3d2806, #5c3d1e)",
 };
 
@@ -39,8 +40,11 @@ function App() {
         overflow: "hidden",
       }}
     >
-      {/* 3D Background — renders only during gameplay */}
+      {/* 3D Background — renders during gameplay */}
       {show3D && <WorldScene />}
+
+      {/* 3D Background — renders during story */}
+      {screen === "story" && <StoryScene />}
 
       {/* UI Layer */}
       <AnimatePresence mode="wait">

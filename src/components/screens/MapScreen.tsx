@@ -3,6 +3,14 @@ import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../../config";
 import styles from "./screens.module.css";
 
+const WORLD_POSITIONS = [
+  { x: "35%", y: "80%" },
+  { x: "65%", y: "65%" },
+  { x: "30%", y: "48%" },
+  { x: "68%", y: "32%" },
+  { x: "50%", y: "12%" },
+];
+
 export function MapScreen() {
   const { playerName, totalStars, worldProgress, enterWorld } = useGameStore();
 
@@ -11,60 +19,66 @@ export function MapScreen() {
 
   return (
     <motion.div
-      className={styles.centeredScreen}
+      className={styles.mapOverlay}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      style={{ justifyContent: "flex-start", paddingTop: "2rem" }}
     >
-      <h2 className={styles.mapTitle}>🗺️ מַפַּת הַמַּמְלָכָה</h2>
-      <p className={styles.mapSubtitle}>עִזְרוּ לַתּוֹשָׁבִים לְגָרֵשׁ אֶת עֶרְפֵל הַשִּׁכְחָה!</p>
-      <div className={styles.starsBadge}>⭐ {totalStars} כּוֹכָבִים | 🦸 {playerName}</div>
+      {/* Fantasy map background image */}
+      <div className={styles.mapBg} />
 
-      <div className={styles.worldsPath}>
-        {WORLDS.map((world, idx) => {
-          const unlocked = isUnlocked(idx);
-          const wp = worldProgress[idx];
-          const char = CHARACTERS[world.characterId];
-          const status = wp.completed ? "completed" : unlocked ? "available" : "locked";
-
-          return (
-            <motion.div key={idx} initial={{ x: -30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: idx * 0.1 }}>
-              {idx > 0 && (
-                <div
-                  className={styles.pathLine}
-                  style={{
-                    background: wp.completed || worldProgress[idx - 1].completed
-                      ? "rgba(46,204,113,0.5)"
-                      : "rgba(255,255,255,0.15)",
-                  }}
-                />
-              )}
-              <motion.div
-                className={`${styles.worldNode} ${styles[status]}`}
-                whileHover={unlocked ? { x: -8, scale: 1.02 } : {}}
-                whileTap={unlocked ? { scale: 0.98 } : {}}
-                onClick={() => unlocked && enterWorld(idx)}
-              >
-                <span className={styles.worldEmoji}>{world.emoji}</span>
-                <div className={styles.worldInfo}>
-                  <div className={styles.worldName}>{world.name}</div>
-                  <div className={styles.worldCharName}>
-                    {char.emoji} {char.name}
-                  </div>
-                  <div className={styles.worldStatus}>
-                    {wp.completed
-                      ? `${"⭐".repeat(wp.stars)}${"☆".repeat(3 - wp.stars)} (${wp.score}/${world.questionsNeeded})`
-                      : unlocked
-                        ? "לְהַתְחִיל הַרְפַּתְקָאָה!"
-                        : "🔒 נָעוּל"}
-                  </div>
-                </div>
-                {wp.completed && <span className={styles.worldBadge}>✅</span>}
-              </motion.div>
-            </motion.div>
-          );
-        })}
+      {/* Header */}
+      <div className={styles.mapHeader}>
+        <span className={styles.mapTitleNew}>🗺️ מַפַּת הַמַּמְלָכָה</span>
+        <span className={styles.starsBadgeNew}>⭐ {totalStars} | 🦸 {playerName}</span>
       </div>
+
+      {/* World Markers — glass medallions over map */}
+      {WORLDS.map((world, idx) => {
+        const unlocked = isUnlocked(idx);
+        const wp = worldProgress[idx];
+        const char = CHARACTERS[world.characterId];
+        const status = wp.completed ? "completed" : unlocked ? "available" : "locked";
+        const pos = WORLD_POSITIONS[idx];
+
+        return (
+          <motion.div
+            key={idx}
+            className={`${styles.mapMarker} ${styles[`marker_${status}`]}`}
+            style={{ left: pos.x, top: pos.y }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20,
+              delay: idx * 0.12,
+            }}
+            whileHover={unlocked ? { scale: 1.1 } : {}}
+            whileTap={unlocked ? { scale: 0.95 } : {}}
+            onClick={() => unlocked && enterWorld(idx)}
+          >
+            <div className={styles.medallion}>
+              <span className={styles.markerEmoji}>{world.emoji}</span>
+              {wp.completed && <span className={styles.checkOverlay}>✓</span>}
+              {!unlocked && <span className={styles.lockOverlay}>🔒</span>}
+            </div>
+            <div className={styles.markerLabel}>
+              <div className={styles.markerName}>{world.name}</div>
+              <div className={styles.markerChar}>
+                {char.emoji} {char.name}
+              </div>
+              {wp.completed && (
+                <div className={styles.markerStars}>
+                  {"⭐".repeat(wp.stars)}{"☆".repeat(3 - wp.stars)}
+                </div>
+              )}
+              {unlocked && !wp.completed && (
+                <div className={styles.markerCta}>לְהַתְחִיל!</div>
+              )}
+            </div>
+          </motion.div>
+        );
+      })}
     </motion.div>
   );
 }
