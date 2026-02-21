@@ -5,7 +5,7 @@ import type {
   Question,
   GeneratedScene,
 } from "../types";
-import { WORLDS } from "../config";
+import { WORLDS, DIFFICULTY_POINTS } from "../config";
 
 interface GameState {
   // Player
@@ -28,6 +28,7 @@ interface GameState {
   // Gameplay
   lives: number;
   correctInWorld: number;
+  scoreInWorld: number;
   questions: Question[];
   currentQuestionIndex: number;
   selectedOption: number | null;
@@ -89,6 +90,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       selectedOption: null,
       showHint: false,
       correctInWorld: 0,
+      scoreInWorld: 0,
       answered: false,
       lives: 3,
       error: null,
@@ -100,6 +102,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   // Gameplay
   lives: 3,
   correctInWorld: 0,
+  scoreInWorld: 0,
   questions: [],
   currentQuestionIndex: 0,
   selectedOption: null,
@@ -112,19 +115,24 @@ export const useGameStore = create<GameState>((set, get) => ({
     const { questions, currentQuestionIndex, answered } = get();
     if (answered) return;
 
-    const isCorrect = optionIndex === questions[currentQuestionIndex].ans;
+    const q = questions[currentQuestionIndex];
+    const isCorrect = optionIndex === q.ans;
+    const points = isCorrect
+      ? DIFFICULTY_POINTS[q.difficulty ?? "medium"]
+      : 0;
     set((state) => ({
       selectedOption: optionIndex,
       answered: true,
       correctInWorld: isCorrect
         ? state.correctInWorld + 1
         : state.correctInWorld,
+      scoreInWorld: state.scoreInWorld + points,
       lives: isCorrect ? state.lives : state.lives - 1,
     }));
   },
 
   nextQuestion: () => {
-    const { currentQuestionIndex, questions, lives, correctInWorld, currentWorldIndex, worldProgress } = get();
+    const { currentQuestionIndex, questions, lives, correctInWorld, scoreInWorld, currentWorldIndex, worldProgress } = get();
 
     if (currentQuestionIndex + 1 >= questions.length || lives <= 0) {
       // Level complete
@@ -133,7 +141,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       const stars = pct >= 0.9 ? 3 : pct >= 0.6 ? 2 : pct > 0 ? 1 : 0;
 
       const newProgress = [...worldProgress];
-      newProgress[currentWorldIndex] = { completed: true, score: correctInWorld, stars };
+      newProgress[currentWorldIndex] = { completed: true, score: scoreInWorld, stars };
       const newTotalStars = newProgress.reduce((s, w) => s + w.stars, 0);
 
       const isFinalWorld = currentWorldIndex === WORLDS.length - 1 && stars > 0;

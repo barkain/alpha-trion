@@ -5,6 +5,7 @@ export const questionSchema = z.object({
   opts: z.array(z.string()).length(4),
   ans: z.number().int().min(0).max(3),
   hint: z.string(),
+  difficulty: z.enum(["easy", "medium", "hard"]).optional(),
 });
 
 const sceneObjectSchema = z.object({

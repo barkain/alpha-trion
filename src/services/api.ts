@@ -1,4 +1,5 @@
-import type { CategoryId, Question, GeneratedScene } from "../types";
+import type { CategoryId, Question, GeneratedScene, Difficulty } from "../types";
+import { loadQuestionBank, getQuestionsFromBank } from "./questionBank";
 import {
   QUESTION_PROMPTS,
   QUESTION_SYSTEM_PROMPT,
@@ -105,9 +106,21 @@ function extractJson(raw: string): unknown {
 
 // ── Public API ──
 
+export async function loadBank(): Promise<boolean> {
+  return loadQuestionBank();
+}
+
+export function getBankQuestions(
+  worldId: number,
+  count: number,
+): Question[] | null {
+  return getQuestionsFromBank(worldId, count);
+}
+
 export async function generateQuestions(
   categories: CategoryId[],
   count: number,
+  difficulties?: Difficulty[],
 ): Promise<Question[] | null> {
   const catPrompts = categories.map((c) =>
     QUESTION_PROMPTS[c].replace(
@@ -159,6 +172,7 @@ export async function generateQuestions(
           ? categories[i % categories.length]
           : categories[0],
       ans: Math.min(Math.max(0, q.ans), 3),
+      difficulty: (q.difficulty as Difficulty) ?? (difficulties?.[i % (difficulties?.length ?? 1)] ?? "medium"),
     }));
   } catch (err) {
     console.error("Failed to generate questions:", err);

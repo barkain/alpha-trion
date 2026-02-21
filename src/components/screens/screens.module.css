@@ -587,10 +587,10 @@
 }
 .finalStats {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin: 1.5rem 0;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
 }
 .statCard {
@@ -607,6 +607,37 @@
   font-size: 0.85rem;
   opacity: 0.7;
   margin-top: 4px;
+}
+
+/* ─── Difficulty & Points ─── */
+.badgeRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.diffBadge {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.scoreDisplay {
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffd700;
+  white-space: nowrap;
+}
+.pointsText {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 0.3rem;
 }
 
 .trophyRain {

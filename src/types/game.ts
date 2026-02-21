@@ -2,6 +2,8 @@
 
 export type CategoryId = "math" | "symbols" | "words" | "patterns";
 
+export type Difficulty = "easy" | "medium" | "hard";
+
 export type ScreenId =
   | "nameInput"
   | "story"
@@ -40,6 +42,7 @@ export interface World {
   characterId: CharacterId;
   categories: CategoryId[];
   questionsNeeded: number;
+  difficultyMix: Record<Difficulty, number>;
   scene: WorldSceneConfig;
 }
 
@@ -58,6 +61,7 @@ export interface Question {
   ans: number; // 0-3
   hint: string;
   cat: CategoryId;
+  difficulty?: Difficulty;
 }
 
 export interface WorldProgress {

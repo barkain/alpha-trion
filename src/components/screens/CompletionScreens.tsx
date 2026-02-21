@@ -4,7 +4,7 @@ import { WORLDS, CHARACTERS } from "../../config";
 import styles from "./screens.module.css";
 
 export function LevelCompleteScreen() {
-  const { currentWorldIndex, correctInWorld, worldProgress, playerName, setScreen } =
+  const { currentWorldIndex, correctInWorld, scoreInWorld, worldProgress, playerName, setScreen } =
     useGameStore();
 
   const world = WORLDS[currentWorldIndex];
@@ -34,6 +34,10 @@ export function LevelCompleteScreen() {
 
       <p className={styles.scoreText}>
         עָנִיתָ נָכוֹן עַל {correctInWorld} מִתּוֹךְ {world.questionsNeeded} שְׁאֵלוֹת
+      </p>
+
+      <p className={styles.pointsText}>
+        {scoreInWorld} נְקוּדוֹת
       </p>
 
       <div className={styles.starsEarned}>
@@ -68,7 +72,8 @@ export function LevelCompleteScreen() {
 }
 
 export function GameCompleteScreen() {
-  const { playerName, totalStars, resetGame } = useGameStore();
+  const { playerName, totalStars, worldProgress, resetGame } = useGameStore();
+  const totalPoints = worldProgress.reduce((s, w) => s + w.score, 0);
 
   return (
     <motion.div
@@ -103,6 +108,10 @@ export function GameCompleteScreen() {
         <div className={styles.statCard}>
           <div className={styles.statValue}>⭐ {totalStars}</div>
           <div className={styles.statLabel}>כּוֹכָבִים</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>{totalPoints}</div>
+          <div className={styles.statLabel}>נְקוּדוֹת</div>
         </div>
         <div className={styles.statCard}>
           <div className={styles.statValue}>{WORLDS.length}</div>

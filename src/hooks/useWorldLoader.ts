@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useGameStore } from "../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../config";
-import { generateQuestions, generateScene } from "../services/api";
+import { generateQuestions, generateScene, loadBank, getBankQuestions } from "../services/api";
 import { pickRandom } from "../utils/helpers";
 
 export function useWorldLoader() {
@@ -22,21 +22,39 @@ export function useWorldLoader() {
     setScreen("loading");
     setError(null);
 
-    // Run question generation and scene generation in parallel
-    const [questions, scene] = await Promise.all([
-      generateQuestions(world.categories, world.questionsNeeded),
-      generateScene(world.scene.scenePromptHint, world.scene.palette),
-    ]);
+    // Try question bank first (instant, no API call)
+    await loadBank();
+    const bankQuestions = getBankQuestions(world.id, world.questionsNeeded);
 
-    if (questions && questions.length > 0) {
-      setQuestions(questions);
-      setGeneratedScene(scene); // scene can be null, fallback handled in 3D layer
-      setLoading(false);
-      setScreen("question");
-    } else {
-      setLoading(false);
-      setError("לא הצלחתי לייצר שאלות. נסו שוב!");
+    // Scene generation runs in parallel with potential AI question fallback
+    const scenePromise = generateScene(world.scene.scenePromptHint, world.scene.palette);
+
+    let questions = bankQuestions;
+    if (!questions || questions.length === 0) {
+      // Fallback to AI generation
+      const [aiQuestions, scene] = await Promise.all([
+        generateQuestions(world.categories, world.questionsNeeded),
+        scenePromise,
+      ]);
+      questions = aiQuestions;
+      if (questions && questions.length > 0) {
+        setQuestions(questions);
+        setGeneratedScene(scene);
+        setLoading(false);
+        setScreen("question");
+      } else {
+        setLoading(false);
+        setError("לא הצלחתי לייצר שאלות. נסו שוב!");
+      }
+      return;
     }
+
+    // Bank questions found — just wait for scene
+    const scene = await scenePromise;
+    setQuestions(questions);
+    setGeneratedScene(scene);
+    setLoading(false);
+    setScreen("question");
   }, [currentWorldIndex, setQuestions, setGeneratedScene, setLoading, setError, setScreen]);
 
   return { loadWorld };

@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
-import { WORLDS, CHARACTERS, CATEGORIES } from "../../config";
+import { WORLDS, CHARACTERS, CATEGORIES, DIFFICULTY_POINTS } from "../../config";
+import type { Difficulty } from "../../types";
 import { pickRandom } from "../../utils/helpers";
 import styles from "./screens.module.css";
+
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  easy: "קַל",
+  medium: "בֵּינוֹנִי",
+  hard: "קָשֶׁה",
+};
+
+const DIFFICULTY_COLORS: Record<Difficulty, string> = {
+  easy: "#2ecc71",
+  medium: "#f39c12",
+  hard: "#e74c3c",
+};
 
 export function QuestionScreen() {
   const {
@@ -14,6 +27,7 @@ export function QuestionScreen() {
     answered,
     showHint,
     lives,
+    scoreInWorld,
     answerQuestion,
     nextQuestion,
     toggleHint,
@@ -74,6 +88,7 @@ export function QuestionScreen() {
             transition={{ duration: 0.5 }}
           />
         </div>
+        <div className={styles.scoreDisplay}>{scoreInWorld} נק׳</div>
         <div className={styles.livesDisplay}>
           {"❤️".repeat(Math.max(0, lives))}
           {"🖤".repeat(Math.max(0, 3 - lives))}
@@ -106,15 +121,28 @@ export function QuestionScreen() {
           exit={{ y: -20, opacity: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <span
-            className={styles.catBadge}
-            style={{
-              background: category.color + "33",
-              color: category.color,
-            }}
-          >
-            {category.icon} {category.name}
-          </span>
+          <div className={styles.badgeRow}>
+            <span
+              className={styles.catBadge}
+              style={{
+                background: category.color + "33",
+                color: category.color,
+              }}
+            >
+              {category.icon} {category.name}
+            </span>
+            {q.difficulty && (
+              <span
+                className={styles.diffBadge}
+                style={{
+                  background: DIFFICULTY_COLORS[q.difficulty] + "33",
+                  color: DIFFICULTY_COLORS[q.difficulty],
+                }}
+              >
+                {DIFFICULTY_LABELS[q.difficulty]} (+{DIFFICULTY_POINTS[q.difficulty]})
+              </span>
+            )}
+          </div>
 
           <p className={styles.questionText}>{q.q}</p>
 
