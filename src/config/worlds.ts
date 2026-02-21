@@ -1,4 +1,10 @@
-import type { World, CategoryId, Category } from "../types";
+import type { World, CategoryId, Category, Difficulty } from "../types";
+
+export const DIFFICULTY_POINTS: Record<Difficulty, number> = {
+  easy: 10,
+  medium: 20,
+  hard: 30,
+};
 
 export const CATEGORIES: Record<CategoryId, Category> = {
   math: { name: "חשבון", icon: "🧮", color: "#FF6B35" },
@@ -15,6 +21,7 @@ export const WORLDS: World[] = [
     characterId: "zohar",
     categories: ["math"],
     questionsNeeded: 4,
+    difficultyMix: { easy: 0, medium: 10, hard: 10 },
     scene: {
       palette: ["#1a472a", "#2d5016", "#0d2818"],
       fogDensity: 0.4,
@@ -29,6 +36,7 @@ export const WORLDS: World[] = [
     characterId: "nurit",
     categories: ["symbols"],
     questionsNeeded: 4,
+    difficultyMix: { easy: 0, medium: 10, hard: 10 },
     scene: {
       palette: ["#2d1b69", "#4a1942", "#1a0533"],
       fogDensity: 0.6,
@@ -43,6 +51,7 @@ export const WORLDS: World[] = [
     characterId: "daniel",
     categories: ["words"],
     questionsNeeded: 4,
+    difficultyMix: { easy: 0, medium: 11, hard: 9 },
     scene: {
       palette: ["#1b4332", "#2d6a4f", "#1b3a2a"],
       fogDensity: 0.3,
@@ -57,6 +66,7 @@ export const WORLDS: World[] = [
     characterId: "miri",
     categories: ["patterns"],
     questionsNeeded: 4,
+    difficultyMix: { easy: 0, medium: 11, hard: 9 },
     scene: {
       palette: ["#1a1a5e", "#2e2e8a", "#0d0d3b"],
       fogDensity: 0.35,
@@ -71,6 +81,7 @@ export const WORLDS: World[] = [
     characterId: "king",
     categories: ["math", "symbols", "words", "patterns"],
     questionsNeeded: 5,
+    difficultyMix: { easy: 0, medium: 9, hard: 11 },
     scene: {
       palette: ["#5c3d1e", "#8b6914", "#3d2806"],
       fogDensity: 0.25,
