@@ -1,22 +1,43 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { guessGender } from "../../utils/helpers";
+import { detectGenderFromName } from "../../utils/hebrewNames";
 import styles from "./screens.module.css";
 
 export function NameInputScreen() {
   const { playerName, playerGender, setPlayerName, setPlayerGender, setScreen } =
     useGameStore();
   const inputRef = useRef<HTMLInputElement>(null);
+  // Track whether the user has manually clicked a gender button
+  const [manualOverride, setManualOverride] = useState(false);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
+  const handleManualGenderSelect = useCallback(
+    (gender: "male" | "female") => {
+      setManualOverride(true);
+      setPlayerGender(gender);
+    },
+    [setPlayerGender],
+  );
+
   const handleNameChange = (name: string) => {
     setPlayerName(name);
+
+    // Skip auto-detection if the user has manually selected a gender
+    if (manualOverride) return;
+
     if (name.trim().length >= 2) {
-      setPlayerGender(guessGender(name));
+      // Try dictionary lookup first, then fall back to suffix heuristic
+      const detected = detectGenderFromName(name);
+      if (detected) {
+        setPlayerGender(detected);
+      } else {
+        setPlayerGender(guessGender(name));
+      }
     }
   };
 
@@ -71,13 +92,13 @@ export function NameInputScreen() {
             <div className={styles.genderPicker}>
               <button
                 className={`${styles.genderBtn} ${!isFemale ? styles.genderBtnActive : ""}`}
-                onClick={() => setPlayerGender("male")}
+                onClick={() => handleManualGenderSelect("male")}
               >
                 👦 בֵּן
               </button>
               <button
                 className={`${styles.genderBtn} ${isFemale ? styles.genderBtnActive : ""}`}
-                onClick={() => setPlayerGender("female")}
+                onClick={() => handleManualGenderSelect("female")}
               >
                 👧 בַּת
               </button>

@@ -11,6 +11,8 @@ export const CATEGORIES: Record<CategoryId, Category> = {
   symbols: { name: "חידות סמלים", icon: "🔮", color: "#9B59B6" },
   words: { name: "יחסי מילים", icon: "📚", color: "#2ECC71" },
   patterns: { name: "סדרות וחוקיות", icon: "🔢", color: "#3498DB" },
+  inequalities: { name: "אי-שוויון", icon: "⚖️", color: "#FF6B6B" },
+  reading: { name: "הבנת הנקרא", icon: "📖", color: "#4ECDC4" },
 };
 
 export const WORLDS: World[] = [
@@ -19,7 +21,7 @@ export const WORLDS: World[] = [
     name: "יַעַר הַחֵשְׁבּוֹן",
     emoji: "🌲",
     characterId: "zohar",
-    categories: ["math"],
+    categories: ["math", "inequalities"],
     questionsNeeded: 4,
     difficultyMix: { easy: 0, medium: 10, hard: 10 },
     scene: {
@@ -49,7 +51,7 @@ export const WORLDS: World[] = [
     name: "סִפְרִיַּת הַמִּלִּים",
     emoji: "📖",
     characterId: "daniel",
-    categories: ["words"],
+    categories: ["words", "reading"],
     questionsNeeded: 4,
     difficultyMix: { easy: 0, medium: 11, hard: 9 },
     scene: {
@@ -79,7 +81,7 @@ export const WORLDS: World[] = [
     name: "הָאַרְמוֹן הַגָּדוֹל",
     emoji: "👑",
     characterId: "king",
-    categories: ["math", "symbols", "words", "patterns"],
+    categories: ["math", "symbols", "words", "patterns", "inequalities", "reading"],
     questionsNeeded: 5,
     difficultyMix: { easy: 0, medium: 9, hard: 11 },
     scene: {

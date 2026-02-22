@@ -7,7 +7,7 @@ import styles from "./screens.module.css";
 const WORLD_POSITIONS = [
   { x: "35%", y: "80%" },
   { x: "65%", y: "65%" },
-  { x: "30%", y: "48%" },
+  { x: "25%", y: "35%" },
   { x: "68%", y: "32%" },
   { x: "50%", y: "12%" },
 ];
