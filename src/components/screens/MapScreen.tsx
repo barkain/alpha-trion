@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
-import { WORLDS, CHARACTERS } from "../../config";
+import { WORLDS, CHARACTERS, BADGES } from "../../config";
+import { playSound, preloadSounds } from "../../services/soundManager";
 import styles from "./screens.module.css";
 
 const WORLD_POSITIONS = [
@@ -12,10 +13,16 @@ const WORLD_POSITIONS = [
 ];
 
 export function MapScreen() {
-  const { playerName, totalStars, worldProgress, enterWorld } = useGameStore();
+  const { playerName, totalStars, worldProgress, earnedBadges, soundMuted, toggleMute, enterWorld } = useGameStore();
 
   const isUnlocked = (idx: number) =>
     idx === 0 || (worldProgress[idx - 1].completed && worldProgress[idx - 1].stars > 0);
+
+  const handleEnterWorld = (idx: number) => {
+    preloadSounds();
+    playSound("click");
+    enterWorld(idx);
+  };
 
   return (
     <motion.div
@@ -30,6 +37,29 @@ export function MapScreen() {
       <div className={styles.mapHeader}>
         <span className={styles.mapTitleNew}>🗺️ מַפַּת הַמַּמְלָכָה</span>
         <span className={styles.starsBadgeNew}>⭐ {totalStars} | 🦸 {playerName}</span>
+        {/* Earned badges */}
+        {earnedBadges.length > 0 && (
+          <span className={styles.earnedBadgesRow}>
+            {earnedBadges.map((id) => {
+              const badge = BADGES.find((b) => b.id === id);
+              return badge ? (
+                <span key={id} className={styles.earnedBadgeIcon} title={badge.name}>
+                  {badge.emoji}
+                </span>
+              ) : null;
+            })}
+          </span>
+        )}
+        {/* Mute toggle */}
+        <button
+          className={styles.muteBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleMute();
+          }}
+        >
+          {soundMuted ? "🔇" : "🔊"}
+        </button>
       </div>
 
       {/* World Markers — glass medallions over map */}
@@ -55,7 +85,7 @@ export function MapScreen() {
             }}
             whileHover={unlocked ? { scale: 1.1 } : {}}
             whileTap={unlocked ? { scale: 0.95 } : {}}
-            onClick={() => unlocked && enterWorld(idx)}
+            onClick={() => unlocked && handleEnterWorld(idx)}
           >
             <div className={styles.medallion}>
               <span className={styles.markerEmoji}>{world.emoji}</span>

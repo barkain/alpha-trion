@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { MapForest } from "../objects/MapForest";
 import { MapPath } from "../objects/MapPath";
 import { MapLandmarks } from "../objects/MapLandmarks";
+import { HeroCharacter } from "../objects/HeroCharacter";
 import { MagicFog } from "../effects/MagicFog";
 import { FloatingParticles } from "../effects/FloatingParticles";
 
@@ -76,6 +77,7 @@ export function MapScene() {
           <MapForest />
           <MapPath />
           <MapLandmarks />
+          <HeroCharacter />
           <FloatingParticles count={60} color="#FFD700" spread={20} />
           <MagicFog color="#0a0820" count={30} strengthOverride={0.4} />
 

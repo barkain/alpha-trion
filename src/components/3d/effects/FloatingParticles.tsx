@@ -1,6 +1,19 @@
-import { useRef, useMemo } from "react";
+import { useRef, useState, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+
+function generateParticles(count: number, spread: number) {
+  return Array.from({ length: count }, () => ({
+    position: new THREE.Vector3(
+      (Math.random() - 0.5) * spread,
+      Math.random() * 6,
+      (Math.random() - 0.5) * spread,
+    ),
+    speed: 0.2 + Math.random() * 0.6,
+    offset: Math.random() * Math.PI * 2,
+    scale: 0.02 + Math.random() * 0.05,
+  }));
+}
 
 interface FloatingParticlesProps {
   count?: number;
@@ -15,20 +28,7 @@ export function FloatingParticles({
 }: FloatingParticlesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
 
-  const particles = useMemo(
-    () =>
-      Array.from({ length: count }, () => ({
-        position: new THREE.Vector3(
-          (Math.random() - 0.5) * spread,
-          Math.random() * 6,
-          (Math.random() - 0.5) * spread,
-        ),
-        speed: 0.2 + Math.random() * 0.6,
-        offset: Math.random() * Math.PI * 2,
-        scale: 0.02 + Math.random() * 0.05,
-      })),
-    [count, spread],
-  );
+  const [particles] = useState(() => generateParticles(count, spread));
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
 

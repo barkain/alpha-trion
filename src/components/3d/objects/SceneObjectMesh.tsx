@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { SceneObject } from "../../../types/game";
@@ -38,11 +38,11 @@ function getGeometry(type: SceneObject["type"]): THREE.BufferGeometry {
 export function SceneObjectMesh({ obj }: SceneObjectMeshProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const startY = obj.position[1];
-  const startTime = useRef(Math.random() * Math.PI * 2);
+  const [startTimeValue] = useState(() => Math.random() * Math.PI * 2);
 
   useFrame(({ clock }) => {
     if (!meshRef.current) return;
-    const t = clock.getElapsedTime() + startTime.current;
+    const t = clock.getElapsedTime() + startTimeValue;
 
     switch (obj.animation) {
       case "float":

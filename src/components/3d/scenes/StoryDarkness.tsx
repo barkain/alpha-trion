@@ -1,43 +1,42 @@
-import { useRef, useMemo } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { SubSceneWrapper } from "./SubSceneWrapper";
 import { MagicFog } from "../effects/MagicFog";
 
+function generateRocks() {
+  return Array.from({ length: 5 }, () => ({
+    position: [
+      (Math.random() - 0.5) * 12,
+      Math.random() * 2,
+      -3 - Math.random() * 6,
+    ] as [number, number, number],
+    rotation: [
+      Math.random() * 0.3 - 0.15,
+      0,
+      Math.random() * 0.3 - 0.15,
+    ] as [number, number, number],
+    height: 2 + Math.random() * 3,
+    radius: 0.3 + Math.random() * 0.5,
+  }));
+}
+
+function generateCrystals() {
+  return Array.from({ length: 4 }, () => ({
+    position: [
+      (Math.random() - 0.5) * 8,
+      1.5 + Math.random() * 3,
+      (Math.random() - 0.5) * 8,
+    ] as [number, number, number],
+    speed: 0.5 + Math.random(),
+  }));
+}
+
 export function StoryDarkness({ active }: { active: boolean }) {
   const crystalGroupRef = useRef<THREE.Group>(null);
 
-  const rocks = useMemo(
-    () =>
-      Array.from({ length: 5 }, () => ({
-        position: [
-          (Math.random() - 0.5) * 12,
-          Math.random() * 2,
-          -3 - Math.random() * 6,
-        ] as [number, number, number],
-        rotation: [
-          Math.random() * 0.3 - 0.15,
-          0,
-          Math.random() * 0.3 - 0.15,
-        ] as [number, number, number],
-        height: 2 + Math.random() * 3,
-        radius: 0.3 + Math.random() * 0.5,
-      })),
-    [],
-  );
-
-  const crystals = useMemo(
-    () =>
-      Array.from({ length: 4 }, () => ({
-        position: [
-          (Math.random() - 0.5) * 8,
-          1.5 + Math.random() * 3,
-          (Math.random() - 0.5) * 8,
-        ] as [number, number, number],
-        speed: 0.5 + Math.random(),
-      })),
-    [],
-  );
+  const [rocks] = useState(generateRocks);
+  const [crystals] = useState(generateCrystals);
 
   useFrame((_state, delta) => {
     if (!crystalGroupRef.current) return;

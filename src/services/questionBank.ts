@@ -118,3 +118,10 @@ export function resetBankUsage(): void {
 export function isBankLoaded(): boolean {
   return bank !== null;
 }
+
+export function sortByDifficulty(questions: Question[]): Question[] {
+  const order: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
+  return [...questions].sort(
+    (a, b) => (order[a.difficulty ?? "medium"] ?? 1) - (order[b.difficulty ?? "medium"] ?? 1),
+  );
+}

@@ -12,7 +12,8 @@ export type ScreenId =
   | "loading"
   | "question"
   | "levelComplete"
-  | "gameComplete";
+  | "gameComplete"
+  | "worldTransition";
 
 export type CharacterId = "zohar" | "nurit" | "daniel" | "miri" | "king";
 
@@ -33,6 +34,12 @@ export interface Character {
   wrongResponses: string[];
   storyIntro: string;
   loadingMessages: string[];
+  transitionNarrative?: {
+    saved: string;
+    gratitude: string;
+    handoff: string;
+    restoredEmoji: string;
+  };
 }
 
 export interface World {

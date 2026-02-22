@@ -4,6 +4,7 @@ import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS, CATEGORIES, DIFFICULTY_POINTS } from "../../config";
 import type { Difficulty } from "../../types";
 import { pickRandom } from "../../utils/helpers";
+import { playSound, preloadSounds } from "../../services/soundManager";
 import styles from "./screens.module.css";
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -28,6 +29,9 @@ export function QuestionScreen() {
     showHint,
     lives,
     scoreInWorld,
+    streak,
+    lastStreakMultiplier,
+    lastSpeedBonus,
     answerQuestion,
     nextQuestion,
     toggleHint,
@@ -40,25 +44,45 @@ export function QuestionScreen() {
     text: string;
   } | null>(null);
 
+  const [showSpeedBonus, setShowSpeedBonus] = useState(false);
+
   const world = WORLDS[currentWorldIndex];
   const char = CHARACTERS[world.characterId];
   const q = questions[currentQuestionIndex];
+
+  // Preload sounds on first interaction
+  useEffect(() => {
+    preloadSounds();
+  }, []);
 
   // Update fog when answering correctly
   useEffect(() => {
     if (answered) updateFogStrength();
   }, [answered, updateFogStrength]);
 
+  // Auto-hide speed bonus popup after delay
+  useEffect(() => {
+    if (!showSpeedBonus) return;
+    const timer = setTimeout(() => setShowSpeedBonus(false), 1500);
+    return () => clearTimeout(timer);
+  }, [showSpeedBonus]);
+
   if (!q) return null;
 
   const handleAnswer = (idx: number) => {
     if (answered) return;
+    preloadSounds();
+    playSound("click");
     const isCorrect = idx === q.ans;
     setCharFeedback({
       type: isCorrect ? "correct" : "wrong",
       text: pickRandom(isCorrect ? char.correctResponses : char.wrongResponses),
     });
     answerQuestion(idx);
+    // Show speed bonus popup (will auto-hide via effect)
+    if (isCorrect) {
+      setShowSpeedBonus(true);
+    }
   };
 
   const handleNext = () => {
@@ -67,6 +91,7 @@ export function QuestionScreen() {
   };
 
   const category = CATEGORIES[q.cat];
+  const isWrongAnswer = answered && charFeedback?.type === "wrong";
 
   return (
     <motion.div
@@ -88,12 +113,42 @@ export function QuestionScreen() {
             transition={{ duration: 0.5 }}
           />
         </div>
-        <div className={styles.scoreDisplay}>{scoreInWorld} נק׳</div>
+        <div className={styles.scoreDisplay}>
+          {scoreInWorld} נק׳
+          {/* Streak fire badge */}
+          {streak >= 2 && (
+            <motion.span
+              className={styles.streakBadge}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              key={streak}
+            >
+              🔥×{streak}
+              {lastStreakMultiplier > 1 && (
+                <span className={styles.multiplierText}>×{lastStreakMultiplier}</span>
+              )}
+            </motion.span>
+          )}
+        </div>
         <div className={styles.livesDisplay}>
           {"❤️".repeat(Math.max(0, lives))}
           {"🖤".repeat(Math.max(0, 3 - lives))}
         </div>
       </div>
+
+      {/* Speed bonus popup */}
+      <AnimatePresence>
+        {showSpeedBonus && lastSpeedBonus > 0 && (
+          <motion.div
+            className={styles.speedBonusPopup}
+            initial={{ opacity: 0, y: 20, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            +{lastSpeedBonus} ⚡
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Character strip */}
       <div className={styles.charStrip} style={{ borderColor: char.color + "44" }}>
@@ -170,7 +225,7 @@ export function QuestionScreen() {
             })}
           </div>
 
-          {/* Hint */}
+          {/* Hint (before answer) */}
           {!answered && !showHint && (
             <button className={styles.hintBtn} onClick={toggleHint}>
               💡 רֶמֶז
@@ -183,6 +238,18 @@ export function QuestionScreen() {
               animate={{ opacity: 1, y: 0 }}
             >
               💡 {q.hint}
+            </motion.div>
+          )}
+
+          {/* Post-answer explanation (wrong answer) */}
+          {isWrongAnswer && q.hint && (
+            <motion.div
+              className={styles.explanationBox}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              הֶסְבֵּר: {q.hint}
             </motion.div>
           )}
 

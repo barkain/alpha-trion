@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useGameStore } from "../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../config";
 import { generateQuestions, generateScene, loadBank, getBankQuestions } from "../services/api";
+import { sortByDifficulty } from "../services/questionBank";
 import { pickRandom } from "../utils/helpers";
 
 export function useWorldLoader() {
@@ -38,7 +39,7 @@ export function useWorldLoader() {
       ]);
       questions = aiQuestions;
       if (questions && questions.length > 0) {
-        setQuestions(questions);
+        setQuestions(sortByDifficulty(questions));
         setGeneratedScene(scene);
         setLoading(false);
         setScreen("question");
@@ -51,7 +52,7 @@ export function useWorldLoader() {
 
     // Bank questions found — just wait for scene
     const scene = await scenePromise;
-    setQuestions(questions);
+    setQuestions(sortByDifficulty(questions));
     setGeneratedScene(scene);
     setLoading(false);
     setScreen("question");

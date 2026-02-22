@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGameStore } from "../../../stores/gameStore";
@@ -17,15 +17,13 @@ interface LandmarkProps {
 function FloatingStars({ count, baseY }: { count: number; baseY: number }) {
   const ref = useRef<THREE.Group>(null);
 
-  const offsets = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => ({
-        angle: (i / count) * Math.PI * 2,
-        radius: 0.3 + Math.random() * 0.4,
-        speed: 0.6 + Math.random() * 0.4,
-        phase: Math.random() * Math.PI * 2,
-      })),
-    [count],
+  const [offsets] = useState(() =>
+    Array.from({ length: count }, (_, i) => ({
+      angle: (i / count) * Math.PI * 2,
+      radius: 0.3 + Math.random() * 0.4,
+      speed: 0.6 + Math.random() * 0.4,
+      phase: Math.random() * Math.PI * 2,
+    })),
   );
 
   useFrame(({ clock }) => {
@@ -513,6 +511,52 @@ function PalaceLandmark({ position, status, stars }: LandmarkProps) {
   );
 }
 
+// --- Restoration Flowers (8 small flowers around completed landmarks) ---
+
+const FLOWER_COLORS = ["#ff69b4", "#ffb6c1", "#ff1493", "#ffd700", "#ff6b9d", "#ff85a2", "#ffa07a", "#ffb347"];
+
+function RestorationFlowers({ position }: { position: [number, number, number] }) {
+  const [flowers] = useState(() =>
+    Array.from({ length: 8 }, (_, i) => {
+      const angle = (i / 8) * Math.PI * 2 + Math.random() * 0.3;
+      const dist = 1.8 + Math.random() * 0.8;
+      return {
+        x: Math.cos(angle) * dist,
+        z: Math.sin(angle) * dist,
+        color: FLOWER_COLORS[i],
+        scale: 0.06 + Math.random() * 0.04,
+        phase: Math.random() * Math.PI * 2,
+      };
+    }),
+  );
+
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!groupRef.current) return;
+    const t = clock.getElapsedTime();
+    groupRef.current.children.forEach((child, i) => {
+      if (i >= flowers.length) return;
+      child.position.y = 0.05 + Math.sin(t * 1.5 + flowers[i].phase) * 0.03;
+    });
+  });
+
+  return (
+    <group ref={groupRef} position={position}>
+      {flowers.map((f, i) => (
+        <mesh key={i} position={[f.x, 0.05, f.z]}>
+          <sphereGeometry args={[f.scale, 6, 6]} />
+          <meshStandardMaterial
+            color={f.color}
+            emissive={f.color}
+            emissiveIntensity={0.5}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 // --- Main component ---
 
 const LANDMARK_COMPONENTS = [
@@ -538,12 +582,17 @@ export function MapLandmarks() {
             : "locked";
 
         return (
-          <LandmarkComponent
-            key={idx}
-            position={WORLD_3D_POSITIONS[idx]}
-            status={status}
-            stars={worldProgress[idx].stars}
-          />
+          <group key={idx}>
+            <LandmarkComponent
+              position={WORLD_3D_POSITIONS[idx]}
+              status={status}
+              stars={worldProgress[idx].stars}
+            />
+            {/* Restoration flowers around completed landmarks */}
+            {status === "completed" && (
+              <RestorationFlowers position={WORLD_3D_POSITIONS[idx]} />
+            )}
+          </group>
         );
       })}
     </group>

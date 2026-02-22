@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useGameStore } from "../../../stores/gameStore";
 import {
   WORLD_3D_POSITIONS,
   MAP_PATH_WAYPOINTS,
@@ -11,6 +12,8 @@ import {
 const TREE_COUNT = 250;
 const FOREST_RADIUS = 14;
 const CANOPY_PALETTE = ["#0d3b1f", "#1a5e2a", "#0a4a1e", "#133d1a"];
+const CANOPY_BRIGHT_PALETTE = ["#1a7a3a", "#2ecc71", "#1a9e4a", "#22b84a"];
+const RESTORATION_RADIUS = 5;
 const PATH_SAMPLES = 100;
 
 interface TreeData {
@@ -80,22 +83,40 @@ function generateTrees(): TreeData[] {
 export function MapForest() {
   const canopyRef = useRef<THREE.InstancedMesh>(null);
   const trunkRef = useRef<THREE.InstancedMesh>(null);
+  const worldProgress = useGameStore((s) => s.worldProgress);
 
   const trees = useMemo(() => generateTrees(), []);
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  // Per-instance canopy colors
+  // Compute per-instance canopy colors based on restoration (completed worlds brighten nearby trees)
   const canopyColors = useMemo(() => {
     const colors = new Float32Array(TREE_COUNT * 3);
-    const palette = CANOPY_PALETTE.map((c) => new THREE.Color(c));
+    const darkPalette = CANOPY_PALETTE.map((c) => new THREE.Color(c));
+    const brightPalette = CANOPY_BRIGHT_PALETTE.map((c) => new THREE.Color(c));
+
     trees.forEach((tree, i) => {
+      // Check if tree is near any completed world
+      let nearCompleted = false;
+      for (let w = 0; w < WORLD_3D_POSITIONS.length; w++) {
+        if (worldProgress[w]?.completed && worldProgress[w]?.stars > 0) {
+          const [wx, , wz] = WORLD_3D_POSITIONS[w];
+          const dx = tree.x - wx;
+          const dz = tree.z - wz;
+          if (dx * dx + dz * dz < RESTORATION_RADIUS * RESTORATION_RADIUS) {
+            nearCompleted = true;
+            break;
+          }
+        }
+      }
+
+      const palette = nearCompleted ? brightPalette : darkPalette;
       const c = palette[tree.colorIdx];
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;
     });
     return colors;
-  }, [trees]);
+  }, [trees, worldProgress]);
 
   // Set initial matrices and instance colors
   useEffect(() => {

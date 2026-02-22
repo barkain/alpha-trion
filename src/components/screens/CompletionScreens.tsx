@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../../config";
@@ -11,6 +12,17 @@ export function LevelCompleteScreen() {
   const char = CHARACTERS[world.characterId];
   const wp = worldProgress[currentWorldIndex];
   const success = correctInWorld >= world.questionsNeeded * 0.6;
+
+  const isFinalWorld = currentWorldIndex === WORLDS.length - 1;
+  const hasTransition = !isFinalWorld && success && char.transitionNarrative;
+
+  const handleBack = () => {
+    if (hasTransition) {
+      setScreen("worldTransition");
+    } else {
+      setScreen("map");
+    }
+  };
 
   return (
     <motion.div
@@ -62,10 +74,10 @@ export function LevelCompleteScreen() {
         className={styles.goldBtn}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setScreen("map")}
+        onClick={handleBack}
         style={{ marginTop: "1.5rem" }}
       >
-        🗺️ חֲזָרָה לַמַּפָּה
+        {hasTransition ? "✨ הַמְשֵׁךְ" : "🗺️ חֲזָרָה לַמַּפָּה"}
       </motion.button>
     </motion.div>
   );
@@ -132,22 +144,33 @@ export function GameCompleteScreen() {
 }
 
 // ── Trophy Rain effect ──
+
+function generateTrophyData() {
+  return Array.from({ length: 25 }, () => ({
+    duration: 2 + Math.random() * 3,
+    delay: Math.random() * 2,
+    left: Math.random() * 100,
+  }));
+}
+
 function TrophyRain() {
   const emojis = ["⭐", "🌟", "✨", "🎉", "🏆", "💫", "🎊"];
+  const [data] = useState(generateTrophyData);
+
   return (
     <div className={styles.trophyRain}>
-      {Array.from({ length: 25 }, (_, i) => (
+      {data.map((d, i) => (
         <motion.div
           key={i}
           className={styles.trophyItem}
           initial={{ y: -50, opacity: 1, rotate: 0 }}
           animate={{ y: "110vh", opacity: 0, rotate: 720 }}
           transition={{
-            duration: 2 + Math.random() * 3,
-            delay: Math.random() * 2,
+            duration: d.duration,
+            delay: d.delay,
             ease: "easeIn",
           }}
-          style={{ left: `${Math.random() * 100}%`, position: "absolute", fontSize: "2rem" }}
+          style={{ left: `${d.left}%`, position: "absolute", fontSize: "2rem" }}
         >
           {emojis[i % emojis.length]}
         </motion.div>
