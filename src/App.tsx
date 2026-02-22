@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useGameStore } from "./stores/gameStore";
 import { WorldScene } from "./components/3d/scenes/WorldScene";
@@ -23,6 +24,105 @@ const BG_MAP: Record<string, string> = {
   gameComplete: "linear-gradient(135deg, #1a0f00, #3d2806, #5c3d1e)",
   worldTransition: "linear-gradient(135deg, #0f0c29, #1a1a5e, #24243e)",
 };
+
+function ResetButton() {
+  const resetGame = useGameStore((s) => s.resetGame);
+  const [confirming, setConfirming] = useState(false);
+
+  if (confirming) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          bottom: "1.5rem",
+          left: "1.5rem",
+          zIndex: 200,
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          background: "rgba(15, 12, 41, 0.92)",
+          backdropFilter: "blur(16px)",
+          border: "1px solid rgba(231, 76, 60, 0.5)",
+          borderRadius: "16px",
+          padding: "0.6rem 1rem",
+          fontFamily: "'Rubik', sans-serif",
+          direction: "rtl",
+        }}
+      >
+        <span style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.85)" }}>
+          להתחיל מחדש?
+        </span>
+        <button
+          onClick={() => { resetGame(); setConfirming(false); }}
+          style={{
+            background: "rgba(231, 76, 60, 0.3)",
+            border: "1px solid rgba(231, 76, 60, 0.6)",
+            color: "#ff6b6b",
+            padding: "0.35rem 0.8rem",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontFamily: "'Rubik', sans-serif",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+          }}
+        >
+          כן
+        </button>
+        <button
+          onClick={() => setConfirming(false)}
+          style={{
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            color: "white",
+            padding: "0.35rem 0.8rem",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontFamily: "'Rubik', sans-serif",
+            fontSize: "0.8rem",
+          }}
+        >
+          לא
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setConfirming(true)}
+      title="התחל מחדש"
+      style={{
+        position: "fixed",
+        bottom: "1.5rem",
+        left: "1.5rem",
+        zIndex: 200,
+        background: "rgba(255, 255, 255, 0.1)",
+        border: "1px solid rgba(255, 255, 255, 0.2)",
+        borderRadius: "50%",
+        width: "42px",
+        height: "42px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "1.2rem",
+        cursor: "pointer",
+        color: "white",
+        backdropFilter: "blur(8px)",
+        transition: "all 0.2s",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
+        e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.4)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+      }}
+    >
+      ↺
+    </button>
+  );
+}
 
 function App() {
   const screen = useGameStore((s) => s.screen);
@@ -56,6 +156,9 @@ function App() {
 
       {/* Badge Toast — global overlay */}
       <BadgeToast />
+
+      {/* Reset button — hidden on the starting screen */}
+      {screen !== "nameInput" && <ResetButton />}
 
       {/* UI Layer */}
       <AnimatePresence mode="wait">
