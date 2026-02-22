@@ -28,10 +28,13 @@ const BG_MAP: Record<string, string> = {
 function ResetButton() {
   const resetGame = useGameStore((s) => s.resetGame);
   const [confirming, setConfirming] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   if (confirming) {
     return (
       <div
+        role="dialog"
+        aria-modal="true"
         style={{
           position: "fixed",
           bottom: "1.5rem",
@@ -53,7 +56,7 @@ function ResetButton() {
           להתחיל מחדש?
         </span>
         <button
-          onClick={() => { resetGame(); setConfirming(false); }}
+          onClick={resetGame}
           style={{
             background: "rgba(231, 76, 60, 0.3)",
             border: "1px solid rgba(231, 76, 60, 0.6)",
@@ -90,14 +93,16 @@ function ResetButton() {
   return (
     <button
       onClick={() => setConfirming(true)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       title="התחל מחדש"
       style={{
         position: "fixed",
         bottom: "1.5rem",
         left: "1.5rem",
         zIndex: 200,
-        background: "rgba(255, 255, 255, 0.1)",
-        border: "1px solid rgba(255, 255, 255, 0.2)",
+        background: hovered ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.1)",
+        border: `1px solid ${hovered ? "rgba(255, 215, 0, 0.4)" : "rgba(255, 255, 255, 0.2)"}`,
         borderRadius: "50%",
         width: "42px",
         height: "42px",
@@ -109,14 +114,6 @@ function ResetButton() {
         color: "white",
         backdropFilter: "blur(8px)",
         transition: "all 0.2s",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = "rgba(255, 255, 255, 0.2)";
-        e.currentTarget.style.borderColor = "rgba(255, 215, 0, 0.4)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
-        e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
       }}
     >
       ↺
