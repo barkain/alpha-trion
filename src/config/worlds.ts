@@ -1,4 +1,4 @@
-import type { World, CategoryId, Category, Difficulty, Gender } from "../types";
+import type { World, CategoryId, Category, Difficulty } from "../types";
 
 export const DIFFICULTY_POINTS: Record<Difficulty, number> = {
   easy: 10,
@@ -91,16 +91,11 @@ export const WORLDS: World[] = [
   },
 ];
 
-/** Helper: pick male/female variant based on gender */
-export function g(gender: Gender, male: string, female: string): string {
-  return gender === "female" ? female : male;
-}
-
 export const STORY_TEXTS = {
-  opening: (name: string, gender: Gender) =>
-    `פַּעַם, בְּמַמְלָכָה רְחוֹקָה מְאוֹד, ${g(gender, "הָיָה יֶלֶד", "הָיְתָה יַלְדָּה")} בְּשֵׁם ${name}.\nיוֹם אֶחָד, ${g(gender, "כְּשֶׁיָּשַׁב בְּחַדְרוֹ וְקָרָא", "כְּשֶׁיָּשְׁבָה בְּחַדְרָהּ וְקָרְאָה")} סֵפֶר,\nפִּתְאוֹם הִתְחִיל הַסֵּפֶר לִזְהוֹר בְּאוֹר זָהָב! ✨`,
-  call: (name: string, gender: Gender) =>
-    `מִתּוֹךְ הָאוֹר הוֹפִיעָה הוֹדָעָה:\n"${name} ${g(gender, "הַיָּקָר", "הַיְּקָרָה")}, מַמְלֶכֶת הַחִידוֹת בְּסַכָּנָה!\nעֶרְפֵל הַשִּׁכְחָה מִתְפַּשֵּׁט וְגוֹרֵם לַכּוֹל\nלִשְׁכּוֹחַ אֵיךְ לַחְשׁוֹב! 😱\nרַק ${g(gender, "יֶלֶד חָכָם", "יַלְדָּה חֲכָמָה")} בְּמִיוּחָד ${g(gender, "יָכוֹל", "יְכוֹלָה")} לְהַצִּיל אוֹתָנוּ!"`,
-  accept: (name: string, gender: Gender) =>
-    `${name} ${g(gender, "לָקַח", "לָקְחָה")} נְשִׁימָה עֲמוּקָה, ${g(gender, "חִיֵּךְ", "חִיְּכָה")}, ${g(gender, "וְקָפַץ", "וְקָפְצָה")} לְתוֹךְ הַסֵּפֶר הַזּוֹהֵר...\n\n🌟 הַהַרְפַּתְקָאָה מַתְחִילָה! 🌟`,
+  opening: (name: string) =>
+    `פַּעַם, בְּמַמְלָכָה רְחוֹקָה מְאוֹד, {הָיָה יֶלֶד|הָיְתָה יַלְדָּה} בְּשֵׁם ${name}.\nיוֹם אֶחָד, {כְּשֶׁיָּשַׁב בְּחַדְרוֹ וְקָרָא|כְּשֶׁיָּשְׁבָה בְּחַדְרָהּ וְקָרְאָה} סֵפֶר,\nפִּתְאוֹם הִתְחִיל הַסֵּפֶר לִזְהוֹר בְּאוֹר זָהָב! ✨`,
+  call: (name: string) =>
+    `מִתּוֹךְ הָאוֹר הוֹפִיעָה הוֹדָעָה:\n"${name} {הַיָּקָר|הַיְּקָרָה}, מַמְלֶכֶת הַחִידוֹת בְּסַכָּנָה!\nעֶרְפֵל הַשִּׁכְחָה מִתְפַּשֵּׁט וְגוֹרֵם לַכּוֹל\nלִשְׁכּוֹחַ אֵיךְ לַחְשׁוֹב! 😱\nרַק {יֶלֶד חָכָם|יַלְדָּה חֲכָמָה} בְּמִיוּחָד {יָכוֹל|יְכוֹלָה} לְהַצִּיל אוֹתָנוּ!"`,
+  accept: (name: string) =>
+    `${name} {לָקַח|לָקְחָה} נְשִׁימָה עֲמוּקָה, {חִיֵּךְ|חִיְּכָה}, {וְקָפַץ|וְקָפְצָה} לְתוֹךְ הַסֵּפֶר הַזּוֹהֵר...\n\n🌟 הַהַרְפַּתְקָאָה מַתְחִילָה! 🌟`,
 };
