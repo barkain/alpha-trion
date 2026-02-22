@@ -1,15 +1,24 @@
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
+import { guessGender } from "../../utils/helpers";
 import styles from "./screens.module.css";
 
 export function NameInputScreen() {
-  const { playerName, setPlayerName, setScreen } = useGameStore();
+  const { playerName, playerGender, setPlayerName, setPlayerGender, setScreen } =
+    useGameStore();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const handleNameChange = (name: string) => {
+    setPlayerName(name);
+    if (name.trim().length >= 2) {
+      setPlayerGender(guessGender(name));
+    }
+  };
 
   const handleSubmit = () => {
     if (playerName.trim().length >= 2) {
@@ -17,6 +26,8 @@ export function NameInputScreen() {
       setScreen("story");
     }
   };
+
+  const isFemale = playerGender === "female";
 
   return (
     <motion.div
@@ -42,28 +53,46 @@ export function NameInputScreen() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        <p className={styles.prompt}>מָה שִׁמְךָ, גִּיבּוֹר? 🌟</p>
+        <p className={styles.prompt}>
+          {isFemale ? "מָה שְׁמֵךְ, גִּיבּוֹרָה?" : "מָה שִׁמְךָ, גִּיבּוֹר?"} 🌟
+        </p>
         <input
           ref={inputRef}
           className={styles.nameInput}
           type="text"
-          placeholder="הַכְנֵס אֶת שִׁמְךָ..."
+          placeholder={isFemale ? "הַכְנִיסִי אֶת שְׁמֵךְ..." : "הַכְנֵס אֶת שִׁמְךָ..."}
           value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
+          onChange={(e) => handleNameChange(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           maxLength={20}
         />
         {playerName.trim().length >= 2 && (
-          <motion.button
-            className={styles.goldBtn}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleSubmit}
-          >
-            🚀 יַאלְלָה, מַתְחִילִים!
-          </motion.button>
+          <>
+            <div className={styles.genderPicker}>
+              <button
+                className={`${styles.genderBtn} ${!isFemale ? styles.genderBtnActive : ""}`}
+                onClick={() => setPlayerGender("male")}
+              >
+                👦 בֵּן
+              </button>
+              <button
+                className={`${styles.genderBtn} ${isFemale ? styles.genderBtnActive : ""}`}
+                onClick={() => setPlayerGender("female")}
+              >
+                👧 בַּת
+              </button>
+            </div>
+            <motion.button
+              className={styles.goldBtn}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSubmit}
+            >
+              🚀 יַאלְלָה, מַתְחִילִים!
+            </motion.button>
+          </>
         )}
       </motion.div>
     </motion.div>

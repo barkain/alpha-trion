@@ -2,14 +2,16 @@ import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../../config";
 import { useWorldLoader } from "../../hooks/useWorldLoader";
+import { resolveGender } from "../../utils/helpers";
 import styles from "./screens.module.css";
 
 export function CharIntroScreen() {
-  const { currentWorldIndex, playerName } = useGameStore();
+  const { currentWorldIndex, playerName, playerGender } = useGameStore();
   const { loadWorld } = useWorldLoader();
 
   const world = WORLDS[currentWorldIndex];
   const char = CHARACTERS[world.characterId];
+  const isFemale = playerGender === "female";
 
   return (
     <motion.div
@@ -38,7 +40,7 @@ export function CharIntroScreen() {
         style={{ maxWidth: 500 }}
       >
         <p className={styles.storyText} style={{ fontSize: "1rem" }}>
-          {char.storyIntro}
+          {resolveGender(char.storyIntro, playerGender)}
         </p>
       </motion.div>
 
@@ -50,7 +52,7 @@ export function CharIntroScreen() {
         style={{ borderColor: char.color + "55" }}
       >
         <p className={styles.speechText}>
-          {char.greeting.replace(/{name}/g, playerName)}
+          {resolveGender(char.greeting.replace(/{name}/g, playerName), playerGender)}
         </p>
       </motion.div>
 
@@ -64,7 +66,7 @@ export function CharIntroScreen() {
         onClick={loadWorld}
         style={{ marginTop: "1.5rem" }}
       >
-        💪 בּוֹא נַתְחִיל!
+        {isFemale ? "💪 בּוֹאִי נַתְחִיל!" : "💪 בּוֹא נַתְחִיל!"}
       </motion.button>
     </motion.div>
   );

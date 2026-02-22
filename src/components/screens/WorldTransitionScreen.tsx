@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS } from "../../config";
 import { playSound } from "../../services/soundManager";
+import { resolveGender } from "../../utils/helpers";
 import styles from "./screens.module.css";
 
 export function WorldTransitionScreen() {
-  const { currentWorldIndex, playerName, setScreen } = useGameStore();
+  const { currentWorldIndex, playerName, playerGender, setScreen } = useGameStore();
   const [phase, setPhase] = useState(0);
 
   const world = WORLDS[currentWorldIndex];
@@ -37,7 +38,8 @@ export function WorldTransitionScreen() {
     return null;
   }
 
-  const nameText = (text: string) => text.replace("{name}", playerName);
+  const nameText = (text: string) =>
+    resolveGender(text.replace("{name}", playerName), playerGender);
 
   return (
     <motion.div
@@ -119,7 +121,7 @@ export function WorldTransitionScreen() {
               </motion.span>
             )}
             <p className={styles.transitionText}>
-              {narrative.handoff}
+              {resolveGender(narrative.handoff, playerGender)}
             </p>
             <motion.button
               className={styles.goldBtn}

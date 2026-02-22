@@ -1,11 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS, CATEGORIES, DIFFICULTY_POINTS } from "../../config";
 import type { Difficulty } from "../../types";
-import { pickRandom } from "../../utils/helpers";
+import { pickRandom, resolveGender } from "../../utils/helpers";
 import { playSound, preloadSounds } from "../../services/soundManager";
 import styles from "./screens.module.css";
+
+/** Detect if a line looks like a math equation (contains operators among non-Hebrew chars). */
+function isEquationLine(line: string): boolean {
+  return /[+\-=×÷*]/.test(line) && !/[\u0590-\u05FF]{3,}/.test(line);
+}
+
+/** Render text with equation lines wrapped in LTR direction. */
+function renderWithLtr(text: string): ReactNode {
+  const lines = text.split("\n");
+  return lines.map((line, i) => {
+    const isEq = isEquationLine(line);
+    return (
+      <span key={i}>
+        {i > 0 && "\n"}
+        {isEq ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{line}</span> : line}
+      </span>
+    );
+  });
+}
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   easy: "קַל",
@@ -32,6 +51,7 @@ export function QuestionScreen() {
     streak,
     lastStreakMultiplier,
     lastSpeedBonus,
+    playerGender,
     answerQuestion,
     nextQuestion,
     toggleHint,
@@ -76,7 +96,10 @@ export function QuestionScreen() {
     const isCorrect = idx === q.ans;
     setCharFeedback({
       type: isCorrect ? "correct" : "wrong",
-      text: pickRandom(isCorrect ? char.correctResponses : char.wrongResponses),
+      text: resolveGender(
+        pickRandom(isCorrect ? char.correctResponses : char.wrongResponses),
+        playerGender,
+      ),
     });
     answerQuestion(idx);
     // Show speed bonus popup (will auto-hide via effect)
@@ -199,7 +222,7 @@ export function QuestionScreen() {
             )}
           </div>
 
-          <p className={styles.questionText}>{q.q}</p>
+          <p className={styles.questionText}>{renderWithLtr(q.q)}</p>
 
           <div className={styles.optionsGrid}>
             {q.opts.map((opt, i) => {
@@ -219,7 +242,7 @@ export function QuestionScreen() {
                   onClick={() => handleAnswer(i)}
                   disabled={answered}
                 >
-                  {["א", "ב", "ג", "ד"][i]}. {opt}
+                  {["א", "ב", "ג", "ד"][i]}. {isEquationLine(opt) ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{opt}</span> : opt}
                 </motion.button>
               );
             })}

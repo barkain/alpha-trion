@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
-import { WORLDS, CHARACTERS } from "../../config";
+import { WORLDS, CHARACTERS, g } from "../../config";
 import styles from "./screens.module.css";
 
 export function LevelCompleteScreen() {
-  const { currentWorldIndex, correctInWorld, scoreInWorld, worldProgress, playerName, setScreen } =
+  const { currentWorldIndex, correctInWorld, scoreInWorld, worldProgress, playerName, playerGender, setScreen } =
     useGameStore();
 
   const world = WORLDS[currentWorldIndex];
@@ -45,7 +45,7 @@ export function LevelCompleteScreen() {
       <h2 className={styles.levelTitle}>{world.name} — הוּשְׁלַם!</h2>
 
       <p className={styles.scoreText}>
-        עָנִיתָ נָכוֹן עַל {correctInWorld} מִתּוֹךְ {world.questionsNeeded} שְׁאֵלוֹת
+        {g(playerGender, "עָנִיתָ", "עָנִית")} נָכוֹן עַל {correctInWorld} מִתּוֹךְ {world.questionsNeeded} שְׁאֵלוֹת
       </p>
 
       <p className={styles.pointsText}>
@@ -66,8 +66,8 @@ export function LevelCompleteScreen() {
       >
         <span style={{ fontSize: "1.5rem" }}>{char.emoji}</span>{" "}
         {success
-          ? `${char.name}: "תּוֹדָה רַבָּה, ${playerName}! בְּזָכוּתְךָ הָעֶרְפֵל נֶחֱלָשׁ כָּאן! הַמַּמְלָכָה מוֹדָה לְךָ!"`
-          : `${char.name}: "תּוֹדָה שֶׁנִּסִּיתָ, ${playerName}! אוּלַי נְנַסֶּה שׁוּב?"`}
+          ? `${char.name}: "תּוֹדָה רַבָּה, ${playerName}! ${g(playerGender, "בְּזָכוּתְךָ", "בְּזָכוּתֵךְ")} הָעֶרְפֵל נֶחֱלָשׁ כָּאן! הַמַּמְלָכָה מוֹדָה ${g(playerGender, "לְךָ", "לָךְ")}!"`
+          : `${char.name}: "תּוֹדָה ${g(playerGender, "שֶׁנִּסִּיתָ", "שֶׁנִּסִּית")}, ${playerName}! אוּלַי נְנַסֶּה שׁוּב?"`}
       </motion.div>
 
       <motion.button
@@ -84,7 +84,7 @@ export function LevelCompleteScreen() {
 }
 
 export function GameCompleteScreen() {
-  const { playerName, totalStars, worldProgress, resetGame } = useGameStore();
+  const { playerName, playerGender, totalStars, worldProgress, resetGame } = useGameStore();
   const totalPoints = worldProgress.reduce((s, w) => s + w.score, 0);
 
   return (
@@ -105,7 +105,7 @@ export function GameCompleteScreen() {
         👑
       </motion.div>
 
-      <h1 className={styles.victoryTitle}>גִּיבּוֹר הַמַּמְלָכָה!</h1>
+      <h1 className={styles.victoryTitle}>{g(playerGender, "גִּיבּוֹר", "גִּיבּוֹרַת")} הַמַּמְלָכָה!</h1>
 
       <motion.div
         className={styles.victoryStory}
@@ -113,7 +113,7 @@ export function GameCompleteScreen() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        {`הָעֶרְפֵל הִתְפּוֹגֵג! בְּזָכוּת ${playerName} הָאַמִּיץ,\nמַמְלֶכֶת הַחִידוֹת חוֹזֶרֶת לָזְהוֹר!\n\nזוֹהַר, נוּרִית, דָּנִיֵּאל, מִירִי וְהַמֶּלֶךְ חַכְמוֹן\nמוֹדִים לְךָ מִכָּל הַלֵּב! 🌟`}
+        {`הָעֶרְפֵל הִתְפּוֹגֵג! בְּזָכוּת ${playerName} ${g(playerGender, "הָאַמִּיץ", "הָאַמִּיצָה")},\nמַמְלֶכֶת הַחִידוֹת חוֹזֶרֶת לָזְהוֹר!\n\nזוֹהַר, נוּרִית, דָּנִיֵּאל, מִירִי וְהַמֶּלֶךְ חַכְמוֹן\nמוֹדִים ${g(playerGender, "לְךָ", "לָךְ")} מִכָּל הַלֵּב! 🌟`}
       </motion.div>
 
       <div className={styles.finalStats}>

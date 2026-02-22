@@ -1,5 +1,7 @@
 // ── Core domain types ──
 
+export type Gender = "male" | "female";
+
 export type CategoryId = "math" | "symbols" | "words" | "patterns";
 
 export type Difficulty = "easy" | "medium" | "hard";
