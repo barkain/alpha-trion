@@ -1,6 +1,8 @@
-<!-- MAIN_IMAGE_PLACEHOLDER -->
+![Alpha Trion - Kingdom of Riddles](docs/hero.png)
 
 # Alpha Trion
+
+**[Play Now](https://barkain.github.io/alpha-trion/)**
 
 Interactive 3D educational game for gifted program test preparation (Grade 2, Israel).
 
