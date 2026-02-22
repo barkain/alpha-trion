@@ -9,8 +9,13 @@ import styles from "./screens.module.css";
 
 /** Detect if a line looks like a math equation (contains operators among non-Hebrew chars). */
 function isEquationLine(line: string): boolean {
-  const hasEquationStructure = /[0-9xyz)]\s*[+\-=×÷*]\s*[0-9xyz(]/i.test(line);
-  return hasEquationStructure && !/[\u0590-\u05FF]{3,}/.test(line);
+  // Must contain = sign (core equation indicator) or inequality operators
+  if (!/[=><]/.test(line)) return false;
+  // Must contain at least one arithmetic operator
+  if (!/[+\-×÷*]/.test(line)) return false;
+  // Must NOT be predominantly Hebrew text (3+ consecutive Hebrew chars)
+  if (/[\u0590-\u05FF]{3,}/.test(line)) return false;
+  return true;
 }
 
 /** Render text with equation lines wrapped in LTR direction. */
