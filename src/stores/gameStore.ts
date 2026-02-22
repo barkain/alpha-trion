@@ -5,6 +5,7 @@ import type {
   WorldProgress,
   Question,
   GeneratedScene,
+  Gender,
 } from "../types";
 import { WORLDS, DIFFICULTY_POINTS } from "../config";
 import { playSound } from "../services/soundManager";
@@ -12,7 +13,9 @@ import { playSound } from "../services/soundManager";
 interface GameState {
   // Player
   playerName: string;
+  playerGender: Gender;
   setPlayerName: (name: string) => void;
+  setPlayerGender: (gender: Gender) => void;
 
   // Navigation
   screen: ScreenId;
@@ -128,7 +131,9 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       // Player
       playerName: "",
+      playerGender: "male" as Gender,
       setPlayerName: (name) => set({ playerName: name }),
+      setPlayerGender: (gender) => set({ playerGender: gender }),
 
       // Navigation
       screen: "nameInput",
@@ -338,6 +343,7 @@ export const useGameStore = create<GameState>()(
         localStorage.removeItem("alpha-trion-game");
         set({
           playerName: "",
+          playerGender: "male" as Gender,
           worldProgress: initialWorldProgress(),
           totalStars: 0,
           earnedBadges: [],
@@ -353,6 +359,7 @@ export const useGameStore = create<GameState>()(
       version: 1,
       partialize: (state) => ({
         playerName: state.playerName,
+        playerGender: state.playerGender,
         worldProgress: state.worldProgress,
         totalStars: state.totalStars,
         earnedBadges: state.earnedBadges,

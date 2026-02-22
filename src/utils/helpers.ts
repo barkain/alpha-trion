@@ -1,5 +1,34 @@
+import type { Gender } from "../types";
+
 export function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/** Guess gender from a Hebrew name based on common suffixes. */
+export function guessGender(name: string): Gender {
+  const trimmed = name.trim();
+  if (!trimmed) return "male";
+
+  // Common female suffixes in Hebrew
+  if (trimmed.endsWith("ית") || trimmed.endsWith("ת")) return "female";
+  // Names ending in ה are often female (שרה, רינה, דינה, טליה)
+  // Exclude common male names ending in ה
+  const maleWithHe = ["משה", "משֶׁה", "מֹשֶׁה", "שלמה", "יהודה", "אריה", "אליה"];
+  if (trimmed.endsWith("ה") && !maleWithHe.includes(trimmed)) return "female";
+  if (trimmed.endsWith("הּ")) return "female";
+
+  return "male";
+}
+
+/**
+ * Resolve gendered text templates.
+ * Pattern: {male variant|female variant}
+ * Example: "שֶׁ{אַתָּה|אַתְּ} {אַלּוּף|אַלּוּפָה}" → "שֶׁאַתְּ אַלּוּפָה" (female)
+ */
+export function resolveGender(text: string, gender: Gender): string {
+  return text.replace(/\{([^|}]+)\|([^}]+)\}/g, (_, male, female) =>
+    gender === "female" ? female : male,
+  );
 }
 
 export function clamp(value: number, min: number, max: number): number {

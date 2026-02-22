@@ -1,17 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { STORY_TEXTS } from "../../config";
+import { resolveGender } from "../../utils/helpers";
 import styles from "./screens.module.css";
 
 const STORY_EMOJIS = ["📖", "😱", "🌟"];
 
 export function StoryScreen() {
-  const { storyStep, advanceStory, playerName } = useGameStore();
+  const { storyStep, advanceStory, playerName, playerGender } = useGameStore();
 
   const storyTexts = [
-    STORY_TEXTS.opening(playerName),
-    STORY_TEXTS.call(playerName),
-    STORY_TEXTS.accept(playerName),
+    resolveGender(STORY_TEXTS.opening(playerName), playerGender),
+    resolveGender(STORY_TEXTS.call(playerName), playerGender),
+    resolveGender(STORY_TEXTS.accept(playerName), playerGender),
   ];
 
   return (
