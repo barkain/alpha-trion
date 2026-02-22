@@ -10,7 +10,8 @@
  */
 
 import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // ── Config (inline to avoid importing browser-only modules) ──
 
@@ -142,7 +143,12 @@ function extractJson(raw: string): unknown {
   if (cleaned.startsWith("```")) {
     cleaned = cleaned.replace(/^```(?:json)?\s*/, "").replace(/```\s*$/, "");
   }
-  return JSON.parse(cleaned);
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
+    console.error("JSON parsing error in extractJson:", e, "\nRaw content:", cleaned.slice(0, 200));
+    return [];
+  }
 }
 
 // ── Main ──
@@ -229,7 +235,8 @@ async function main() {
     }
   }
 
-  const outPath = resolve(import.meta.dirname ?? ".", "../public/questions.json");
+  const __dirname = dirname(fileURLToPath(import.meta.url));
+  const outPath = resolve(__dirname, "../public/questions.json");
   writeFileSync(outPath, JSON.stringify(bank, null, 2), "utf-8");
   console.log(`\nWrote ${outPath}`);
   console.log(`Total: ${bank.reduce((s, e) => s + e.questions.length, 0)} questions across ${bank.length} worlds`);

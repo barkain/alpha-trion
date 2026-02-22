@@ -57,7 +57,7 @@ function PathSegment({
   tubeGeometry: THREE.TubeGeometry;
   glowGeometry: THREE.TubeGeometry;
   state: SegmentState;
-  materialRef: React.RefObject<THREE.MeshStandardMaterial | null>;
+  materialRef: (mat: THREE.MeshStandardMaterial | null) => void;
 }) {
   return (
     <group key={segmentIndex}>
@@ -138,13 +138,8 @@ export function MapPath() {
           tubeGeometry={geometries[i].tubeGeometry}
           glowGeometry={geometries[i].glowGeometry}
           state={segmentStates[i]}
-          materialRef={{
-            get current() {
-              return materialRefs.current[i];
-            },
-            set current(v) {
-              materialRefs.current[i] = v;
-            },
+          materialRef={(mat) => {
+            materialRefs.current[i] = mat;
           }}
         />
       ))}

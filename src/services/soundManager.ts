@@ -70,6 +70,7 @@ function playNote(ac: AudioContext, freq: number, start: number, dur: number, ga
   osc.connect(g).connect(ac.destination);
   osc.start(ac.currentTime + start);
   osc.stop(ac.currentTime + start + dur);
+  osc.onended = () => { osc.disconnect(); g.disconnect(); };
 }
 
 // Ascending two-note chime (C5→E5)
@@ -95,6 +96,7 @@ function playStreak(ac: AudioContext) {
   osc.connect(g).connect(ac.destination);
   osc.start(ac.currentTime);
   osc.stop(ac.currentTime + 0.25);
+  osc.onended = () => { osc.disconnect(); g.disconnect(); };
 }
 
 // 3-note fanfare (C5→E5→G5)
@@ -121,4 +123,5 @@ function playUnlock(ac: AudioContext) {
   osc.connect(g).connect(ac.destination);
   osc.start(ac.currentTime);
   osc.stop(ac.currentTime + 0.4);
+  osc.onended = () => { osc.disconnect(); g.disconnect(); };
 }
