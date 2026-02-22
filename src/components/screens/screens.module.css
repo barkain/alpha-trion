@@ -1,0 +1,800 @@
+/* ─── Shared Layout ─── */
+.centeredScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.bigEmoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+}
+
+/* ─── Typography ─── */
+.gameTitle {
+  font-family: "Secular One", sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.2);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+.prompt {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-family: "Heebo", sans-serif;
+}
+
+/* ─── Cards ─── */
+.glassCard {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  max-width: 450px;
+  width: 100%;
+}
+
+.storyCard {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 24px;
+  padding: 2rem;
+  max-width: 550px;
+  width: 100%;
+}
+
+.storyText {
+  font-size: 1.15rem;
+  line-height: 2;
+  white-space: pre-wrap;
+  font-family: "Heebo", sans-serif;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Inputs ─── */
+.nameInput {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.4rem;
+  font-family: "Rubik", sans-serif;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 16px;
+  color: white;
+  outline: none;
+  transition: all 0.3s;
+  direction: rtl;
+}
+.nameInput::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+.nameInput:focus {
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+/* ─── Buttons ─── */
+.goldBtn {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: #1a1a2e;
+  border: none;
+  padding: 0.9rem 2.5rem;
+  font-size: 1.3rem;
+  font-family: "Secular One", sans-serif;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(255, 165, 0, 0.4);
+  transition: all 0.3s;
+  margin-top: 1.5rem;
+}
+.goldBtn:hover {
+  box-shadow: 0 10px 36px rgba(255, 165, 0, 0.6);
+}
+
+.retryBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.retryBtn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.backBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.backBtn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Character ─── */
+.charName {
+  font-family: "Secular One", sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+}
+
+.speechBubble {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  max-width: 500px;
+  width: 100%;
+  margin-top: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+}
+.speechBubble::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 12px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.5);
+}
+.speechText {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  font-family: "Heebo", sans-serif;
+}
+
+/* ─── Treasure Map ─── */
+.mapOverlay {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  z-index: 10;
+}
+
+.mapBg {
+  position: absolute;
+  inset: 0;
+  background: url("/map-bg.png") center center / cover no-repeat;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mapHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(to bottom, rgba(8, 5, 25, 0.92) 60%, transparent);
+  pointer-events: none;
+}
+
+.mapTitleNew {
+  font-family: "Secular One", sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.starsBadgeNew {
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+/* ─── Markers ─── */
+.mapMarker {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+.medallion {
+  width: clamp(60px, 12vw, 80px);
+  height: clamp(60px, 12vw, 80px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 8, 30, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.markerEmoji {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.checkOverlay {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.markerLabel {
+  margin-top: 0.4rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.markerName {
+  font-family: "Secular One", sans-serif;
+  font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  white-space: nowrap;
+}
+
+.markerChar {
+  font-size: clamp(0.55rem, 1.5vw, 0.7rem);
+  opacity: 0.65;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.markerStars {
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.markerCta {
+  font-size: clamp(0.5rem, 1.3vw, 0.65rem);
+  color: #ffd700;
+  margin-top: 2px;
+  font-family: "Heebo", sans-serif;
+}
+
+/* Marker states */
+.marker_completed .medallion {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.25), 0 0 40px rgba(255, 215, 0, 0.08);
+}
+
+.marker_available .medallion {
+  border-color: rgba(255, 255, 255, 0.5);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.marker_locked .medallion {
+  cursor: not-allowed;
+  filter: saturate(0.3);
+  opacity: 0.55;
+}
+.marker_locked .markerLabel {
+  opacity: 0.4;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 215, 0, 0.35), 0 0 48px rgba(255, 215, 0, 0.12);
+  }
+}
+
+@media (max-width: 480px) {
+  .markerChar {
+    display: none;
+  }
+  .mapHeader {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* ─── Loading ─── */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffd700;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+.loadingText {
+  font-size: 1.2rem;
+  font-family: "Heebo", sans-serif;
+}
+.loadingSub {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+/* ─── Question Overlay ─── */
+.questionOverlay {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.qHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.progressBar {
+  flex: 1;
+  margin: 0 1rem;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #ffd700, #ff6b35);
+}
+
+.livesDisplay {
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+}
+
+.charStrip {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 1rem;
+  max-width: 700px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.charStripEmoji {
+  font-size: 2rem;
+}
+.charStripText {
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-family: "Heebo", sans-serif;
+  opacity: 0.9;
+}
+
+.questionCard {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.catBadge {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.questionText {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  white-space: pre-wrap;
+}
+
+.optionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option {
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  color: white;
+  font-size: 1.1rem;
+  font-family: "Rubik", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: right;
+  direction: rtl;
+}
+.option_default:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.option_correct {
+  background: rgba(46, 204, 113, 0.3) !important;
+  border-color: #2ecc71 !important;
+}
+.option_wrong {
+  background: rgba(231, 76, 60, 0.3) !important;
+  border-color: #e74c3c !important;
+}
+.option_disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.hintBtn {
+  margin-top: 1rem;
+  background: none;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: "Rubik", sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+.hintBtn:hover {
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.hintText {
+  margin-top: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  font-size: 0.95rem;
+  color: #ffd700;
+}
+
+.charFeedback {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+}
+.feedbackCorrect {
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+.feedbackWrong {
+  background: rgba(231, 76, 60, 0.15);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* ─── Level / Game Complete ─── */
+.levelTitle {
+  font-family: "Secular One", sans-serif;
+  font-size: 2rem;
+  margin: 0.8rem 0;
+}
+.scoreText {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 0.3rem;
+}
+.starsEarned {
+  font-size: 3rem;
+  letter-spacing: 8px;
+  margin: 0.8rem 0;
+}
+.charEndMsg {
+  max-width: 450px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 1.2rem 1.5rem;
+  font-family: "Heebo", sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.victoryTitle {
+  font-family: "Secular One", sans-serif;
+  font-size: 2.5rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, #ffd700, #ff6b35);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.victoryStory {
+  max-width: 500px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  font-family: "Heebo", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  white-space: pre-wrap;
+}
+.finalStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+  max-width: 500px;
+  width: 100%;
+}
+.statCard {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.2rem;
+  backdrop-filter: blur(10px);
+}
+.statValue {
+  font-size: 2rem;
+  font-weight: 800;
+}
+.statLabel {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* ─── Difficulty & Points ─── */
+.badgeRow {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.diffBadge {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.scoreDisplay {
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffd700;
+  white-space: nowrap;
+}
+.pointsText {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 0.3rem;
+}
+
+.trophyRain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+
+/* ─── Streak Badge ─── */
+.streakBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  background: rgba(255, 107, 0, 0.25);
+  border: 1px solid rgba(255, 107, 0, 0.5);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #ff6b00;
+  font-weight: 700;
+}
+.multiplierText {
+  font-size: 0.7rem;
+  color: #ffd700;
+  margin-right: 0.2rem;
+}
+
+/* ─── Speed Bonus Popup ─── */
+.speedBonusPopup {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: #1a1a2e;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-family: "Secular One", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(255, 165, 0, 0.5);
+  pointer-events: none;
+}
+
+/* ─── Explanation Box (post-wrong-answer) ─── */
+.explanationBox {
+  margin-top: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(255, 215, 0, 0.12);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  font-size: 0.95rem;
+  color: #ffd700;
+  font-family: "Heebo", sans-serif;
+  line-height: 1.6;
+}
+
+/* ─── World Transition Screen ─── */
+.transitionCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+}
+.transitionEmoji {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+}
+.transitionText {
+  font-size: 1.2rem;
+  line-height: 2;
+  font-family: "Heebo", sans-serif;
+  white-space: pre-wrap;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.transitionTap {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  animation: pulseOpacity 2s ease-in-out infinite;
+}
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* ─── Badge Toast ─── */
+.badgeToast {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: rgba(15, 12, 41, 0.92);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  border-radius: 20px;
+  padding: 0.8rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+  cursor: pointer;
+}
+.badgeToastEmoji {
+  font-size: 2rem;
+}
+.badgeToastContent {
+  text-align: right;
+}
+.badgeToastTitle {
+  font-family: "Secular One", sans-serif;
+  font-size: 1rem;
+  color: #ffd700;
+}
+.badgeToastDesc {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  font-family: "Heebo", sans-serif;
+}
+
+/* ─── Map Header Extras ─── */
+.earnedBadgesRow {
+  display: flex;
+  gap: 0.2rem;
+  pointer-events: auto;
+}
+.earnedBadgeIcon {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+}
+.muteBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s;
+}
+.muteBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
