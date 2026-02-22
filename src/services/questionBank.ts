@@ -28,7 +28,7 @@ export async function loadQuestionBank(): Promise<boolean> {
   loadAttempted = true;
 
   try {
-    const res = await fetch("/questions.json");
+    const res = await fetch(`${import.meta.env.BASE_URL}questions.json`);
     if (!res.ok) return false;
 
     const json: unknown = await res.json();
