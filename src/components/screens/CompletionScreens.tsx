@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
-import { WORLDS, CHARACTERS, g } from "../../config";
+import { WORLDS, CHARACTERS } from "../../config";
+import { resolveGender } from "../../utils/helpers";
 import styles from "./screens.module.css";
 
 export function LevelCompleteScreen() {
@@ -45,7 +46,7 @@ export function LevelCompleteScreen() {
       <h2 className={styles.levelTitle}>{world.name} — הוּשְׁלַם!</h2>
 
       <p className={styles.scoreText}>
-        {g(playerGender, "עָנִיתָ", "עָנִית")} נָכוֹן עַל {correctInWorld} מִתּוֹךְ {world.questionsNeeded} שְׁאֵלוֹת
+        {resolveGender("{עָנִיתָ|עָנִית}", playerGender)} נָכוֹן עַל {correctInWorld} מִתּוֹךְ {world.questionsNeeded} שְׁאֵלוֹת
       </p>
 
       <p className={styles.pointsText}>
@@ -66,8 +67,8 @@ export function LevelCompleteScreen() {
       >
         <span style={{ fontSize: "1.5rem" }}>{char.emoji}</span>{" "}
         {success
-          ? `${char.name}: "תּוֹדָה רַבָּה, ${playerName}! ${g(playerGender, "בְּזָכוּתְךָ", "בְּזָכוּתֵךְ")} הָעֶרְפֵל נֶחֱלָשׁ כָּאן! הַמַּמְלָכָה מוֹדָה ${g(playerGender, "לְךָ", "לָךְ")}!"`
-          : `${char.name}: "תּוֹדָה ${g(playerGender, "שֶׁנִּסִּיתָ", "שֶׁנִּסִּית")}, ${playerName}! אוּלַי נְנַסֶּה שׁוּב?"`}
+          ? resolveGender(`${char.name}: "תּוֹדָה רַבָּה, ${playerName}! {בְּזָכוּתְךָ|בְּזָכוּתֵךְ} הָעֶרְפֵל נֶחֱלָשׁ כָּאן! הַמַּמְלָכָה מוֹדָה {לְךָ|לָךְ}!"`, playerGender)
+          : resolveGender(`${char.name}: "תּוֹדָה {שֶׁנִּסִּיתָ|שֶׁנִּסִּית}, ${playerName}! אוּלַי נְנַסֶּה שׁוּב?"`, playerGender)}
       </motion.div>
 
       <motion.button
@@ -105,7 +106,7 @@ export function GameCompleteScreen() {
         👑
       </motion.div>
 
-      <h1 className={styles.victoryTitle}>{g(playerGender, "גִּיבּוֹר", "גִּיבּוֹרַת")} הַמַּמְלָכָה!</h1>
+      <h1 className={styles.victoryTitle}>{resolveGender("{גִּיבּוֹר|גִּיבּוֹרַת}", playerGender)} הַמַּמְלָכָה!</h1>
 
       <motion.div
         className={styles.victoryStory}
@@ -113,7 +114,7 @@ export function GameCompleteScreen() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        {`הָעֶרְפֵל הִתְפּוֹגֵג! בְּזָכוּת ${playerName} ${g(playerGender, "הָאַמִּיץ", "הָאַמִּיצָה")},\nמַמְלֶכֶת הַחִידוֹת חוֹזֶרֶת לָזְהוֹר!\n\nזוֹהַר, נוּרִית, דָּנִיֵּאל, מִירִי וְהַמֶּלֶךְ חַכְמוֹן\nמוֹדִים ${g(playerGender, "לְךָ", "לָךְ")} מִכָּל הַלֵּב! 🌟`}
+        {resolveGender(`הָעֶרְפֵל הִתְפּוֹגֵג! בְּזָכוּת ${playerName} {הָאַמִּיץ|הָאַמִּיצָה},\nמַמְלֶכֶת הַחִידוֹת חוֹזֶרֶת לָזְהוֹר!\n\nזוֹהַר, נוּרִית, דָּנִיֵּאל, מִירִי וְהַמֶּלֶךְ חַכְמוֹן\nמוֹדִים {לְךָ|לָךְ} מִכָּל הַלֵּב! 🌟`, playerGender)}
       </motion.div>
 
       <div className={styles.finalStats}>

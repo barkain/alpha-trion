@@ -13,7 +13,7 @@ export function guessGender(name: string): Gender {
   if (trimmed.endsWith("ית") || trimmed.endsWith("ת")) return "female";
   // Names ending in ה are often female (שרה, רינה, דינה, טליה)
   // Exclude common male names ending in ה
-  const maleWithHe = ["משה", "משֶׁה", "מֹשֶׁה"];
+  const maleWithHe = ["משה", "משֶׁה", "מֹשֶׁה", "שלמה", "יהודה", "אריה", "אליה"];
   if (trimmed.endsWith("ה") && !maleWithHe.includes(trimmed)) return "female";
   if (trimmed.endsWith("הּ")) return "female";
 

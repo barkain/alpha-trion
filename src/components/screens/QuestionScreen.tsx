@@ -9,7 +9,8 @@ import styles from "./screens.module.css";
 
 /** Detect if a line looks like a math equation (contains operators among non-Hebrew chars). */
 function isEquationLine(line: string): boolean {
-  return /[+\-=×÷*]/.test(line) && !/[\u0590-\u05FF]{3,}/.test(line);
+  const hasEquationStructure = /[0-9xyz)]\s*[+\-=×÷*]\s*[0-9xyz(]/i.test(line);
+  return hasEquationStructure && !/[\u0590-\u05FF]{3,}/.test(line);
 }
 
 /** Render text with equation lines wrapped in LTR direction. */
