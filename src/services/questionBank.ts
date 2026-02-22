@@ -57,7 +57,7 @@ export async function loadQuestionBank(): Promise<boolean> {
         worldId,
         questions: questions.data.map((q) => ({
           ...q,
-          cat: world.categories[0],
+          cat: q.cat ?? world.categories[0],
           difficulty: (q.difficulty as Difficulty) ?? "medium",
         })),
       });

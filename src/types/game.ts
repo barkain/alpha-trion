@@ -2,7 +2,7 @@
 
 export type Gender = "male" | "female";
 
-export type CategoryId = "math" | "symbols" | "words" | "patterns";
+export type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -71,6 +71,7 @@ export interface Question {
   hint: string;
   cat: CategoryId;
   difficulty?: Difficulty;
+  passage?: string;
 }
 
 export interface WorldProgress {

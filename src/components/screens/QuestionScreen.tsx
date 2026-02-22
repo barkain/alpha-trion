@@ -9,8 +9,8 @@ import styles from "./screens.module.css";
 
 /** Detect if a line looks like a math equation (contains operators among non-Hebrew chars). */
 function isEquationLine(line: string): boolean {
-  // Must contain = sign (core equation indicator) or inequality operators
-  if (!/[=><]/.test(line)) return false;
+  // Must contain = sign, inequality operators, or __ blank placeholder
+  if (!/[=><]/.test(line) && !/__/.test(line)) return false;
   // Must contain at least one arithmetic operator
   if (!/[+\-×÷*]/.test(line)) return false;
   // Must NOT be predominantly Hebrew text (3+ consecutive Hebrew chars)
@@ -227,6 +227,13 @@ export function QuestionScreen() {
               </span>
             )}
           </div>
+
+          {q.passage && (
+            <div className={styles.passageBlock}>
+              <span className={styles.passageIcon}>📖</span>
+              <p className={styles.passageText}>{q.passage}</p>
+            </div>
+          )}
 
           <p className={styles.questionText}>{renderWithLtr(q.q)}</p>
 

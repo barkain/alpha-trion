@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url";
 
 // ── Config (inline to avoid importing browser-only modules) ──
 
-type CategoryId = "math" | "symbols" | "words" | "patterns";
+type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading";
 type Difficulty = "easy" | "medium" | "hard";
 
 interface WorldDef {
@@ -26,11 +26,11 @@ interface WorldDef {
 }
 
 const WORLDS: WorldDef[] = [
-  { id: 0, categories: ["math"], questionsNeeded: 4, difficultyMix: { easy: 2, medium: 1, hard: 1 } },
+  { id: 0, categories: ["math", "inequalities"], questionsNeeded: 4, difficultyMix: { easy: 2, medium: 1, hard: 1 } },
   { id: 1, categories: ["symbols"], questionsNeeded: 4, difficultyMix: { easy: 2, medium: 1, hard: 1 } },
-  { id: 2, categories: ["words"], questionsNeeded: 4, difficultyMix: { easy: 1, medium: 2, hard: 1 } },
+  { id: 2, categories: ["words", "reading"], questionsNeeded: 4, difficultyMix: { easy: 1, medium: 2, hard: 1 } },
   { id: 3, categories: ["patterns"], questionsNeeded: 4, difficultyMix: { easy: 1, medium: 2, hard: 1 } },
-  { id: 4, categories: ["math", "symbols", "words", "patterns"], questionsNeeded: 5, difficultyMix: { easy: 1, medium: 2, hard: 2 } },
+  { id: 4, categories: ["math", "symbols", "words", "patterns", "inequalities", "reading"], questionsNeeded: 5, difficultyMix: { easy: 1, medium: 2, hard: 2 } },
 ];
 
 const QUESTION_PROMPTS: Record<CategoryId, string> = {
@@ -42,6 +42,12 @@ const QUESTION_PROMPTS: Record<CategoryId, string> = {
 פורמט: "מילה1 : מילה2 = ? : מילה3"`,
   patterns: `צור {n} שאלות סדרות וחוקיות מספריות לילד בכיתה ב׳ בסגנון מבחן מחוננים.
 סוגים: סדרות מספרים, מספרים בצורות, מציאת חוקיות בין שורות.`,
+
+  inequalities: `צור {n} שאלות אי-שוויון לילד בכיתה ב׳ (גיל 7-8) בסגנון מבחן מחוננים.
+סוגי שאלות: השלם את הסימן (>, <, =) בין שני ביטויים חשבוניים, מצא מספר שמשלים אי-שוויון.`,
+
+  reading: `צור {n} שאלות הבנת הנקרא לילד בכיתה ב׳ (גיל 7-8) בסגנון מבחן מחוננים.
+כל שאלה חייבת לכלול שדה "passage" עם קטע קריאה קצר (2-4 משפטים) בעברית פשוטה.`,
 };
 
 const SYSTEM_PROMPT = `אתה יוצר שאלות למבחן מחוננים לילדי כיתה ב׳ בישראל.
@@ -62,7 +68,9 @@ const SYSTEM_PROMPT = `אתה יוצר שאלות למבחן מחוננים לי
 - כתוב בעברית תקנית
 - ערבב את מיקום התשובה הנכונה
 - כל 4 התשובות צריכות להיות סבירות
-- הוסף שדה difficulty לכל שאלה`;
+- הוסף שדה difficulty לכל שאלה
+- לשאלות הבנת הנקרא הוסף שדה "passage" עם קטע הקריאה
+- הוסף שדה "cat" עם קטגוריית השאלה`;
 
 // ── API helpers ──
 
