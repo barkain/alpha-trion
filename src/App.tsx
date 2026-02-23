@@ -4,6 +4,7 @@ import { useGameStore } from "./stores/gameStore";
 import { WorldScene } from "./components/3d/scenes/WorldScene";
 import { StoryScene } from "./components/3d/scenes/StoryScene";
 import { MapScene } from "./components/3d/scenes/MapScene";
+import { ConfettiScene } from "./components/3d/effects/ConfettiScene";
 import { BadgeToast } from "./components/screens/BadgeToast";
 import {
   NameInputScreen,
@@ -126,6 +127,7 @@ function App() {
 
   const show3D = screen === "question" || screen === "loading" || screen === "charIntro";
   const showMap3D = screen === "map";
+  const showConfetti = screen === "levelComplete" || screen === "gameComplete";
 
   const bg = BG_MAP[screen] ?? "linear-gradient(135deg, #0f0c29, #1a1a5e, #24243e)";
 
@@ -150,6 +152,9 @@ function App() {
 
       {/* 3D Map — renders during map screen */}
       {showMap3D && <MapScene />}
+
+      {/* 3D Confetti — renders during level/game complete */}
+      {showConfetti && <ConfettiScene />}
 
       {/* Badge Toast — global overlay */}
       <BadgeToast />

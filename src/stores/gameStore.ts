@@ -75,6 +75,7 @@ interface GameState {
   setGeneratedScene: (scene: GeneratedScene | null) => void;
   fogStrength: number;
   updateFogStrength: () => void;
+  answerFeedback: "correct" | "wrong" | null;
 
   // Loading
   isLoading: boolean;
@@ -170,6 +171,7 @@ export const useGameStore = create<GameState>()(
           lastStreakMultiplier: 1,
           lastSpeedBonus: 0,
           questionStartTime: 0,
+          answerFeedback: null,
           screen: "charIntro",
         }),
 
@@ -233,6 +235,7 @@ export const useGameStore = create<GameState>()(
             maxStreak: newMaxStreak,
             lastStreakMultiplier: multiplier,
             lastSpeedBonus: speedBonus,
+            answerFeedback: (isCorrect ? "correct" : "wrong") as "correct" | "wrong",
           };
           return { ...updated, ...checkAndAwardBadges(updated as GameState) };
         });
@@ -284,6 +287,7 @@ export const useGameStore = create<GameState>()(
             showHint: false,
             answered: false,
             questionStartTime: Date.now(),
+            answerFeedback: null,
           });
         }
       },
@@ -324,6 +328,7 @@ export const useGameStore = create<GameState>()(
       generatedScene: null,
       setGeneratedScene: (scene) => set({ generatedScene: scene }),
       fogStrength: 1,
+      answerFeedback: null,
       updateFogStrength: () => {
         const { correctInWorld, currentWorldIndex } = get();
         const world = WORLDS[currentWorldIndex];
