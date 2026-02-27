@@ -6,7 +6,7 @@ export const questionSchema = z.object({
   ans: z.number().int().min(0).max(3),
   hint: z.string(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
-  cat: z.enum(["math", "symbols", "words", "patterns", "inequalities", "reading"]).optional(),
+  cat: z.enum(["math", "symbols", "words", "patterns", "inequalities", "reading", "sentences", "oddOneOut"]).optional(),
   passage: z.string().optional(),
 });
 
