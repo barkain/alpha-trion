@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { guessGender } from "../../utils/helpers";
 import { detectGenderFromName } from "../../utils/hebrewNames";
+import { LeaderboardOverlay } from "./LeaderboardOverlay";
 import styles from "./screens.module.css";
 
 export function NameInputScreen() {
@@ -11,6 +12,7 @@ export function NameInputScreen() {
   const inputRef = useRef<HTMLInputElement>(null);
   // Track whether the user has manually clicked a gender button
   const [manualOverride, setManualOverride] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -57,6 +59,13 @@ export function NameInputScreen() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
+      <button
+        className={`${styles.leaderboardBtn} ${styles.leaderboardBtnPosition}`}
+        onClick={() => setLeaderboardOpen(true)}
+      >
+        🏆 לוּחַ תוֹצָאוֹת
+      </button>
+
       <motion.div
         className={styles.bigEmoji}
         animate={{ y: [0, -12, 0] }}
@@ -116,6 +125,7 @@ export function NameInputScreen() {
           </>
         )}
       </motion.div>
+      <LeaderboardOverlay open={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
     </motion.div>
   );
 }

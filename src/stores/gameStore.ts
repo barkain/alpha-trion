@@ -6,6 +6,7 @@ import type {
   Question,
   GeneratedScene,
   Gender,
+  QuestionResult,
 } from "../types";
 import { WORLDS, DIFFICULTY_POINTS } from "../config";
 import { playSound } from "../services/soundManager";
@@ -35,6 +36,7 @@ interface GameState {
   correctInWorld: number;
   scoreInWorld: number;
   questions: Question[];
+  questionResults: QuestionResult[];
   currentQuestionIndex: number;
   selectedOption: number | null;
   answered: boolean;
@@ -162,6 +164,7 @@ export const useGameStore = create<GameState>()(
           showHint: false,
           correctInWorld: 0,
           scoreInWorld: 0,
+          questionResults: [],
           answered: false,
           lives: 3,
           error: null,
@@ -180,6 +183,7 @@ export const useGameStore = create<GameState>()(
       correctInWorld: 0,
       scoreInWorld: 0,
       questions: [],
+      questionResults: [],
       currentQuestionIndex: 0,
       selectedOption: null,
       answered: false,
@@ -221,6 +225,14 @@ export const useGameStore = create<GameState>()(
           playSound("wrong");
         }
 
+        const timeMs = questionStartTime > 0 ? Date.now() - questionStartTime : 0;
+        const result: QuestionResult = {
+          correct: isCorrect,
+          category: q.cat,
+          difficulty: q.difficulty ?? "medium",
+          timeMs,
+        };
+
         set((state) => {
           const updated = {
             ...state,
@@ -236,6 +248,7 @@ export const useGameStore = create<GameState>()(
             lastStreakMultiplier: multiplier,
             lastSpeedBonus: speedBonus,
             answerFeedback: (isCorrect ? "correct" : "wrong") as "correct" | "wrong",
+            questionResults: [...state.questionResults, result],
           };
           return { ...updated, ...checkAndAwardBadges(updated as GameState) };
         });
@@ -260,7 +273,7 @@ export const useGameStore = create<GameState>()(
           };
           const newTotalStars = newProgress.reduce((s, w) => s + w.stars, 0);
 
-          const isFinalWorld = currentWorldIndex === WORLDS.length - 1 && stars > 0;
+          const isFinalWorld = currentWorldIndex === WORLDS.length - 1;
 
           playSound("levelUp");
 
