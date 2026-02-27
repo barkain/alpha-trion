@@ -74,10 +74,28 @@ export interface Question {
   passage?: string;
 }
 
+export interface QuestionResult {
+  correct: boolean;
+  category: CategoryId;
+  difficulty: Difficulty;
+  timeMs: number;
+}
+
 export interface WorldProgress {
   completed: boolean;
   score: number;
   stars: number; // 0-3
+}
+
+// ── Leaderboard ──
+
+export interface LeaderboardEntry {
+  playerName: string;
+  totalStars: number;
+  totalScore: number;
+  worldsCompleted: number;
+  maxStreak: number;
+  date: string; // ISO date
 }
 
 // ── AI Scene Generation ──

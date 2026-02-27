@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS, BADGES } from "../../config";
 import { playSound, preloadSounds } from "../../services/soundManager";
+import { LeaderboardOverlay } from "./LeaderboardOverlay";
 import styles from "./screens.module.css";
 
 const WORLD_POSITIONS = [
@@ -14,6 +16,7 @@ const WORLD_POSITIONS = [
 
 export function MapScreen() {
   const { playerName, totalStars, worldProgress, earnedBadges, soundMuted, toggleMute, enterWorld } = useGameStore();
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   const isUnlocked = (idx: number) =>
     idx === 0 || (worldProgress[idx - 1].completed && worldProgress[idx - 1].stars > 0);
@@ -50,6 +53,16 @@ export function MapScreen() {
             })}
           </span>
         )}
+        {/* Leaderboard */}
+        <button
+          className={styles.leaderboardBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            setLeaderboardOpen(true);
+          }}
+        >
+          🏆
+        </button>
         {/* Mute toggle */}
         <button
           className={styles.muteBtn}
@@ -109,6 +122,7 @@ export function MapScreen() {
           </motion.div>
         );
       })}
+      <LeaderboardOverlay open={leaderboardOpen} onClose={() => setLeaderboardOpen(false)} />
     </motion.div>
   );
 }

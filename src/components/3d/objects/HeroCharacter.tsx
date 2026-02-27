@@ -101,6 +101,9 @@ export function HeroCharacter() {
 
       {/* Sparkle particles */}
       <SparkleParticles />
+
+      {/* Enhancement #14: Trail particles */}
+      <HeroTrail isWalking={heroAnimating} />
     </group>
   );
 }
@@ -143,5 +146,73 @@ function SparkleParticles() {
         </mesh>
       ))}
     </group>
+  );
+}
+
+/** Enhancement #14: Gold trail particles emitted during walk */
+const TRAIL_COUNT = 20;
+
+function HeroTrail({ isWalking }: { isWalking: boolean }) {
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const bufferRef = useRef(0);
+  const lastEmitRef = useRef(0);
+
+  // Circular buffer of particle spawn times and positions
+  const trailData = useRef(
+    Array.from({ length: TRAIL_COUNT }, () => ({
+      spawnTime: -10,
+      x: 0,
+      y: 0,
+      z: 0,
+    })),
+  );
+
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    const t = clock.getElapsedTime();
+
+    // Emit new particles when walking
+    if (isWalking && t - lastEmitRef.current > 0.08) {
+      const idx = bufferRef.current % TRAIL_COUNT;
+      trailData.current[idx] = {
+        spawnTime: t,
+        x: (Math.random() - 0.5) * 0.15,
+        y: 0.1,
+        z: (Math.random() - 0.5) * 0.15,
+      };
+      bufferRef.current++;
+      lastEmitRef.current = t;
+    }
+
+    trailData.current.forEach((p, i) => {
+      const age = t - p.spawnTime;
+      if (age < 1 && age >= 0) {
+        const fade = 1 - age;
+        dummy.position.set(p.x, p.y + age * 0.5, p.z);
+        dummy.scale.setScalar(0.03 * fade);
+      } else {
+        dummy.position.set(0, -100, 0);
+        dummy.scale.setScalar(0);
+      }
+      dummy.updateMatrix();
+      meshRef.current!.setMatrixAt(i, dummy.matrix);
+    });
+
+    meshRef.current.instanceMatrix.needsUpdate = true;
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, TRAIL_COUNT]}>
+      <sphereGeometry args={[1, 6, 6]} />
+      <meshStandardMaterial
+        color="#FFD700"
+        emissive="#FFA500"
+        emissiveIntensity={2}
+        transparent
+        opacity={0.7}
+        toneMapped={false}
+      />
+    </instancedMesh>
   );
 }
