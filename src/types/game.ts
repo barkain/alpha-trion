@@ -2,7 +2,7 @@
 
 export type Gender = "male" | "female";
 
-export type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading" | "sentences" | "oddOneOut";
+export type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading" | "sentences" | "oddOneOut" | "shapes" | "numberFigures";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
