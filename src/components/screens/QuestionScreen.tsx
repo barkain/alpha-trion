@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS, CATEGORIES, DIFFICULTY_POINTS } from "../../config";
 import type { Difficulty } from "../../types";
+import { NumberFigureDiagram } from "./NumberFigureDiagram";
 import { pickRandom, resolveGender } from "../../utils/helpers";
 import { playSound, preloadSounds } from "../../services/soundManager";
 import styles from "./screens.module.css";
@@ -16,6 +17,11 @@ function isEquationLine(line: string): boolean {
   // Must NOT be predominantly Hebrew text (3+ consecutive Hebrew chars)
   if (/[\u0590-\u05FF]{3,}/.test(line)) return false;
   return true;
+}
+
+/** Detect if text is a math symbol that could be mirrored by RTL (e.g. "<", ">", "≤", "≥"). */
+function isMathSymbol(text: string): boolean {
+  return /^[<>=≤≥]+$/.test(text.trim());
 }
 
 /** Render text with equation lines wrapped in LTR direction. */
@@ -235,6 +241,8 @@ export function QuestionScreen() {
             </div>
           )}
 
+          {q.diagram && <NumberFigureDiagram diagram={q.diagram} />}
+
           <p className={styles.questionText}>{renderWithLtr(q.q)}</p>
 
           <div className={styles.optionsGrid}>
@@ -255,7 +263,7 @@ export function QuestionScreen() {
                   onClick={() => handleAnswer(i)}
                   disabled={answered}
                 >
-                  {["א", "ב", "ג", "ד"][i]}. {isEquationLine(opt) ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{opt}</span> : opt}
+                  {["א", "ב", "ג", "ד"][i]}. {(isEquationLine(opt) || isMathSymbol(opt)) ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{opt}</span> : opt}
                 </motion.button>
               );
             })}

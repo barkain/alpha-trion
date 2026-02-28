@@ -264,7 +264,14 @@
         "ans": 3,
         "hint": "מה הקשר? 21 + 2 = 23. אז מה זה 3 + 19?",
         "difficulty": "medium",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "invertedTriangle",
+          "figures": [
+            { "values": [21, 2, 23] },
+            { "values": [3, 19, null] }
+          ]
+        }
       },
       {
         "q": "בשני עיגולים מחולקים ל-3 חלקים, יש קשר בין המספרים. בעיגול הראשון: 21, 7, 3. בעיגול השני: 32, 2, ?. מה המספר החסר?",
@@ -272,7 +279,14 @@
         "ans": 3,
         "hint": "בעיגול הראשון: 21 חלקי 7 שווה 3. מה זה 32 חלקי 2?",
         "difficulty": "medium",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "circle",
+          "figures": [
+            { "values": [21, 7, 3] },
+            { "values": [32, 2, null] }
+          ]
+        }
       },
       {
         "q": "בשני ריבועים, המספרים בצד ימין ובצד שמאל מוכפלים והתוצאה למטה. ריבוע ראשון: 4 ו-5 בצדדים, 20 למטה. ריבוע שני: 3 ו-6 בצדדים, ? למטה. מה המספר החסר?",
@@ -280,7 +294,14 @@
         "ans": 2,
         "hint": "4 כפול 5 = 20. אז מה 3 כפול 6?",
         "difficulty": "medium",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "square",
+          "figures": [
+            { "values": [4, 5, 20] },
+            { "values": [3, 6, null] }
+          ]
+        }
       },
       {
         "q": "בשני משולשים, המספר למעלה שווה לסכום שני המספרים בבסיס. משולש ראשון: 15 למעלה, 8 ו-7 בבסיס. משולש שני: ? למעלה, 9 ו-6 בבסיס. מה המספר החסר?",
@@ -288,7 +309,14 @@
         "ans": 2,
         "hint": "8 + 7 = 15. אז מה 9 + 6?",
         "difficulty": "medium",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "triangle",
+          "figures": [
+            { "values": [15, 8, 7] },
+            { "values": [null, 9, 6] }
+          ]
+        }
       },
       {
         "q": "בשני עיגולים מחולקים ל-4 חלקים, המספר הגדול שווה למכפלת שלושת האחרים. בעיגול הראשון: 2, 3, 5, 30. בעיגול השני: 2, 4, 3, ?. מה המספר החסר?",
@@ -296,7 +324,14 @@
         "ans": 2,
         "hint": "2 × 3 × 5 = 30. אז מה 2 × 4 × 3?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "circle",
+          "figures": [
+            { "values": [2, 3, 5, 30] },
+            { "values": [2, 4, 3, null] }
+          ]
+        }
       },
       {
         "q": "בשני משולשים הפוכים, ההפרש בין המספרים העליונים שווה למספר התחתון. משולש ראשון: 25 ו-13 למעלה, 12 למטה. משולש שני: 30 ו-17 למעלה, ? למטה. מה המספר החסר?",
@@ -304,7 +339,14 @@
         "ans": 2,
         "hint": "25 - 13 = 12. אז מה 30 - 17?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "invertedTriangle",
+          "figures": [
+            { "values": [25, 13, 12] },
+            { "values": [30, 17, null] }
+          ]
+        }
       },
       {
         "q": "בשני ריבועים, סכום כל המספרים בפינות שווה למספר במרכז. ריבוע ראשון: פינות 3, 5, 7, 5 — מרכז 20. ריבוע שני: פינות 4, 6, 2, ? — מרכז 18. מה המספר החסר?",
@@ -312,7 +354,14 @@
         "ans": 2,
         "hint": "3 + 5 + 7 + 5 = 20. אם 4 + 6 + 2 + ? = 18, מה ה-?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "square",
+          "figures": [
+            { "values": [3, 5, 7, 5, 20] },
+            { "values": [4, 6, 2, null, 18] }
+          ]
+        }
       },
       {
         "q": "בשני משולשים, המספר בראש שווה למכפלת שני המספרים בבסיס חלקי 2. משולש ראשון: 12 למעלה, 6 ו-4 בבסיס. משולש שני: ? למעלה, 8 ו-3 בבסיס. מה המספר החסר?",
@@ -320,7 +369,14 @@
         "ans": 2,
         "hint": "6 × 4 = 24, חלקי 2 = 12. אז מה 8 × 3 חלקי 2?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "triangle",
+          "figures": [
+            { "values": [12, 6, 4] },
+            { "values": [null, 8, 3] }
+          ]
+        }
       }
     ]
   },
@@ -1389,7 +1445,14 @@
         "ans": 2,
         "hint": "12 - 7 = 5, כפול 2 = 10. אז מה (15 - 9) × 2?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "triangle",
+          "figures": [
+            { "values": [10, 12, 7] },
+            { "values": [null, 15, 9] }
+          ]
+        }
       },
       {
         "q": "בשני עיגולים מחולקים ל-3 חלקים, סכום שני החלקים הקטנים שווה לחלק הגדול. בעיגול הראשון: 15, 9, 6. בעיגול השני: ?, 11, 8. מה המספר החסר?",
@@ -1397,7 +1460,14 @@
         "ans": 2,
         "hint": "9 + 6 = 15. אז מה 11 + 8?",
         "difficulty": "hard",
-        "cat": "numberFigures"
+        "cat": "numberFigures",
+        "diagram": {
+          "type": "circle",
+          "figures": [
+            { "values": [15, 9, 6] },
+            { "values": [null, 11, 8] }
+          ]
+        }
       }
     ]
   }

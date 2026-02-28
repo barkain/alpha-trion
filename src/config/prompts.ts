@@ -54,7 +54,16 @@ export const QUESTION_PROMPTS: Record<CategoryId, string> = {
 בצורה הראשונה כל המספרים ידועים, בצורה השנייה יש סימן שאלה.
 הילד צריך לגלות את הקשר המתמטי (חיבור, חיסור, כפל, חילוק) בין המספרים בצורה הראשונה ולהחיל אותו על השנייה.
 דוגמה: "בשני משולשים, המספר למעלה שווה לסכום שני המספרים בבסיס. משולש ראשון: 15 למעלה, 8 ו-7 בבסיס. משולש שני: ? למעלה, 9 ו-6 בבסיס."
-המספרים צריכים להיות מותאמים לגיל (עד 100), והקשר צריך להיות ברור אחרי שמגלים אותו.`,
+המספרים צריכים להיות מותאמים לגיל (עד 100), והקשר צריך להיות ברור אחרי שמגלים אותו.
+הוסף שדה "diagram" לכל שאלה עם מבנה הצורה:
+{
+  "type": "triangle" | "invertedTriangle" | "circle" | "square",
+  "figures": [
+    { "values": [מספרים ידועים] },
+    { "values": [מספרים או null עבור ?] }
+  ]
+}
+מיקומי הערכים: triangle=[top,bottomLeft,bottomRight], invertedTriangle=[topLeft,topRight,bottom], circle(3)=[top,bottomLeft,right], circle(4)=[top,right,bottom,left], square(3)=[left,right,bottom], square(5)=[topLeft,topRight,bottomRight,bottomLeft,center].`,
 };
 
 export const QUESTION_SYSTEM_PROMPT = `אתה יוצר שאלות למבחן מחוננים לילדי כיתה ב׳ בישראל. 
@@ -75,7 +84,8 @@ export const QUESTION_SYSTEM_PROMPT = `אתה יוצר שאלות למבחן מ�
 - הרמז צריך לכוון לדרך הפתרון בלי לגלות את התשובה
 - ערבב את מיקום התשובה הנכונה (לא תמיד באותו מקום)
 - כל 4 התשובות צריכות להיות סבירות (מסיחים טובים)
-- לשאלות הבנת הנקרא הוסף שדה "passage" עם קטע הקריאה`;
+- לשאלות הבנת הנקרא הוסף שדה "passage" עם קטע הקריאה
+- לשאלות numberFigures הוסף שדה "diagram" עם סוג הצורה וערכי המספרים (null עבור סימן שאלה)`;
 
 export const SCENE_SYSTEM_PROMPT = `You are a 3D scene generator for a children's educational game.
 Given a scene description, return a JSON array of 3D objects to place in the scene.
