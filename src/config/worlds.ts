@@ -15,6 +15,8 @@ export const CATEGORIES: Record<CategoryId, Category> = {
   reading: { name: "הבנת הנקרא", icon: "📖", color: "#4ECDC4" },
   sentences: { name: "השלמת משפטים", icon: "✏️", color: "#E8A838" },
   oddOneOut: { name: "יוצא דופן", icon: "🎯", color: "#C75BCC" },
+  shapes: { name: "השלמת צורות", icon: "🔷", color: "#4A90D9" },
+  numberFigures: { name: "מספרים בצורות", icon: "📐", color: "#E67E22" },
 };
 
 export const WORLDS: World[] = [
@@ -23,7 +25,7 @@ export const WORLDS: World[] = [
     name: "יַעַר הַחֵשְׁבּוֹן",
     emoji: "🌲",
     characterId: "zohar",
-    categories: ["math", "inequalities"],
+    categories: ["math", "inequalities", "numberFigures"],
     questionsNeeded: 4,
     difficultyMix: { easy: 0, medium: 10, hard: 10 },
     scene: {
@@ -68,8 +70,8 @@ export const WORLDS: World[] = [
     name: "מִגְדַּל הַדְּפוּסִים",
     emoji: "🏰",
     characterId: "miri",
-    categories: ["patterns"],
-    questionsNeeded: 4,
+    categories: ["patterns", "shapes"],
+    questionsNeeded: 5,
     difficultyMix: { easy: 0, medium: 11, hard: 9 },
     scene: {
       palette: ["#1a1a5e", "#2e2e8a", "#0d0d3b"],
@@ -83,7 +85,7 @@ export const WORLDS: World[] = [
     name: "הָאַרְמוֹן הַגָּדוֹל",
     emoji: "👑",
     characterId: "king",
-    categories: ["math", "symbols", "words", "patterns", "inequalities", "reading", "sentences", "oddOneOut"],
+    categories: ["math", "symbols", "words", "patterns", "inequalities", "reading", "sentences", "oddOneOut", "shapes", "numberFigures"],
     questionsNeeded: 5,
     difficultyMix: { easy: 0, medium: 9, hard: 11 },
     scene: {

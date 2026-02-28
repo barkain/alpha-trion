@@ -1,13 +1,22 @@
 import { z } from "zod";
 
+const figureDiagramSchema = z.object({
+  type: z.enum(["triangle", "invertedTriangle", "circle", "square"]),
+  figures: z.tuple([
+    z.object({ values: z.array(z.number()) }),
+    z.object({ values: z.array(z.union([z.number(), z.null()])) }),
+  ]),
+});
+
 export const questionSchema = z.object({
   q: z.string(),
   opts: z.array(z.string()).length(4),
   ans: z.number().int().min(0).max(3),
   hint: z.string(),
   difficulty: z.enum(["easy", "medium", "hard"]).optional(),
-  cat: z.enum(["math", "symbols", "words", "patterns", "inequalities", "reading", "sentences", "oddOneOut"]).optional(),
+  cat: z.enum(["math", "symbols", "words", "patterns", "inequalities", "reading", "sentences", "oddOneOut", "shapes", "numberFigures"]).optional(),
   passage: z.string().optional(),
+  diagram: figureDiagramSchema.optional(),
 });
 
 const sceneObjectSchema = z.object({

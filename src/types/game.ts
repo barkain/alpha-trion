@@ -2,7 +2,7 @@
 
 export type Gender = "male" | "female";
 
-export type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading" | "sentences" | "oddOneOut";
+export type CategoryId = "math" | "symbols" | "words" | "patterns" | "inequalities" | "reading" | "sentences" | "oddOneOut" | "shapes" | "numberFigures";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -64,6 +64,16 @@ export interface WorldSceneConfig {
   scenePromptHint: string;
 }
 
+export type FigureType = "triangle" | "invertedTriangle" | "circle" | "square";
+
+export interface FigureDiagram {
+  type: FigureType;
+  figures: [
+    { values: number[] },
+    { values: (number | null)[] }
+  ];
+}
+
 export interface Question {
   q: string;
   opts: string[];
@@ -72,6 +82,7 @@ export interface Question {
   cat: CategoryId;
   difficulty?: Difficulty;
   passage?: string;
+  diagram?: FigureDiagram;
 }
 
 export interface QuestionResult {

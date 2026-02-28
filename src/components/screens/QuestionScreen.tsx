@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../stores/gameStore";
 import { WORLDS, CHARACTERS, CATEGORIES, DIFFICULTY_POINTS } from "../../config";
 import type { Difficulty } from "../../types";
+import { NumberFigureDiagram } from "./NumberFigureDiagram";
 import { pickRandom, resolveGender } from "../../utils/helpers";
 import { playSound, preloadSounds } from "../../services/soundManager";
 import styles from "./screens.module.css";
@@ -18,6 +19,11 @@ function isEquationLine(line: string): boolean {
   return true;
 }
 
+/** Detect if text is a math symbol that could be mirrored by RTL (e.g. "<", ">", "≤", "≥"). */
+function isMathSymbol(text: string): boolean {
+  return /^[<>=≤≥]+$/.test(text.trim());
+}
+
 /** Render text with equation lines wrapped in LTR direction. */
 function renderWithLtr(text: string): ReactNode {
   const lines = text.split("\n");
@@ -30,6 +36,40 @@ function renderWithLtr(text: string): ReactNode {
       </span>
     );
   });
+}
+
+/** Render text with inline math expressions wrapped in LTR direction.
+ *  Useful for mixed Hebrew + math lines like "12 - 7 = 5, כפול 2 = 10". */
+function renderWithInlineLtr(text: string): ReactNode {
+  const mathPattern = /([(\d][\d\s+\-×÷*=<>().,%/]+[\d)])/g;
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = mathPattern.exec(text)) !== null) {
+    // Add preceding text as-is
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    // Wrap math segment in LTR span
+    parts.push(
+      <span key={key++} dir="ltr" style={{ unicodeBidi: "isolate" }}>
+        {match[1]}
+      </span>
+    );
+    lastIndex = mathPattern.lastIndex;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  // If no math was found, return original text
+  if (parts.length === 0) return text;
+
+  return <>{parts}</>;
 }
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -235,6 +275,8 @@ export function QuestionScreen() {
             </div>
           )}
 
+          {q.diagram && <NumberFigureDiagram diagram={q.diagram} />}
+
           <p className={styles.questionText}>{renderWithLtr(q.q)}</p>
 
           <div className={styles.optionsGrid}>
@@ -255,7 +297,7 @@ export function QuestionScreen() {
                   onClick={() => handleAnswer(i)}
                   disabled={answered}
                 >
-                  {["א", "ב", "ג", "ד"][i]}. {isEquationLine(opt) ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{opt}</span> : opt}
+                  {["א", "ב", "ג", "ד"][i]}. {(isEquationLine(opt) || isMathSymbol(opt)) ? <span dir="ltr" style={{ unicodeBidi: "isolate" }}>{opt}</span> : opt}
                 </motion.button>
               );
             })}
@@ -273,7 +315,7 @@ export function QuestionScreen() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              💡 {q.hint}
+              💡 {renderWithInlineLtr(q.hint)}
             </motion.div>
           )}
 
@@ -285,7 +327,7 @@ export function QuestionScreen() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              הֶסְבֵּר: {q.hint}
+              הֶסְבֵּר: {renderWithInlineLtr(q.hint)}
             </motion.div>
           )}
 
