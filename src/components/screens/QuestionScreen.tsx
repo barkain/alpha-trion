@@ -38,6 +38,40 @@ function renderWithLtr(text: string): ReactNode {
   });
 }
 
+/** Render text with inline math expressions wrapped in LTR direction.
+ *  Useful for mixed Hebrew + math lines like "12 - 7 = 5, כפול 2 = 10". */
+function renderWithInlineLtr(text: string): ReactNode {
+  const mathPattern = /([(\d][\d\s+\-×÷*=<>().,%/]+[\d)])/g;
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = mathPattern.exec(text)) !== null) {
+    // Add preceding text as-is
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    // Wrap math segment in LTR span
+    parts.push(
+      <span key={key++} dir="ltr" style={{ unicodeBidi: "isolate" }}>
+        {match[1]}
+      </span>
+    );
+    lastIndex = mathPattern.lastIndex;
+  }
+
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  // If no math was found, return original text
+  if (parts.length === 0) return text;
+
+  return <>{parts}</>;
+}
+
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
   easy: "קַל",
   medium: "בֵּינוֹנִי",
@@ -281,7 +315,7 @@ export function QuestionScreen() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              💡 {q.hint}
+              💡 {renderWithInlineLtr(q.hint)}
             </motion.div>
           )}
 
@@ -293,7 +327,7 @@ export function QuestionScreen() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              הֶסְבֵּר: {q.hint}
+              הֶסְבֵּר: {renderWithInlineLtr(q.hint)}
             </motion.div>
           )}
 
